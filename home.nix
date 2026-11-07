@@ -6,10 +6,10 @@
   home.stateVersion = "25.11";
   home.sessionPath = [ "$HOME/.local/bin" ];
 
-imports = [
+  imports = [
     inputs.spicetify-nix.homeManagerModules.default
   ];
-xdg.configFile = {
+  xdg.configFile = {
     "waybar".source = ./dotfiles/alicebox/waybar;
     "fnott".source = ./dotfiles/alicebox/fnott;
     "kitty".source = ./dotfiles/alicebox/kitty;
@@ -19,36 +19,40 @@ xdg.configFile = {
     "qt5ct".source = ./dotfiles/alicebox/qt5ct;
     "qt6ct".source = ./dotfiles/alicebox/qt6ct;
     "niri".source = ./dotfiles/alicebox/niri;
-    "emacs".source = ./emacs;
   };
 
-    gtk = {
-      enable = true;
-      theme = {
-        name = "Graphite-Mono";
-        package = pkgs.runCommand "graphite-mono-gtk-theme" {} ''
+  xdg.configFile."emacs/init.el".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nixconfig/emacs/init.el";
+  xdg.configFile."emacs/themes".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nixconfig/emacs/themes";
+
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Graphite-Mono";
+      package = pkgs.runCommand "graphite-mono-gtk-theme" {} ''
           mkdir -p "$out/share/themes"
           cp -r ${./dotfiles/alicebox/gtk-theme} "$out/share/themes/Graphite-Mono"
         '';
-      };
-      gtk4.theme = config.gtk.theme;
-      font = {
-        name = "JetBrains Mono";
-        size = 11;
-      };
-      iconTheme = {
-        name = "Papirus-Dark"; # Or "Adwaita" if you prefer
-        package = (pkgs.papirus-icon-theme.override { color = "violet"; }).overrideAttrs { dontFixup = true; };
-      };
     };
+    gtk4.theme = config.gtk.theme;
+    font = {
+      name = "JetBrains Mono";
+      size = 11;
+    };
+    iconTheme = {
+      name = "Papirus-Dark"; # Or "Adwaita" if you prefer
+      package = (pkgs.papirus-icon-theme.override { color = "violet"; }).overrideAttrs { dontFixup = true; };
+    };
+  };
 
-programs.firefox.profiles."cardinal".settings = {
+  programs.firefox.profiles."cardinal".settings = {
     "widget.wayland.transparent-background" = true;
     "widget.transparent-windows" = true;
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
     "gfx.webrender.all" = true;
   };
-    programs.firefox.configPath = ".mozilla/firefox";
+  programs.firefox.configPath = ".mozilla/firefox";
   home.file.".mozilla/firefox/9jokjkad.default/chrome/userChrome.css".text = ''
     *, *::before, *::after {
       font-family: "JetBrains Mono", monospace !important;
@@ -110,61 +114,67 @@ programs.firefox.profiles."cardinal".settings = {
     user_pref("sidebar.backupState", "{\"command\":\"\",\"panelOpen\":false,\"launcherExpanded\":false,\"launcherVisible\":true}");
     user_pref("browser.toolbars.bookmarks.visibility", "never");
   '';
-programs.spicetify =
+  programs.spicetify =
     let
       spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
     in
-    {
-      enable = true;
+      {
+        enable = true;
 
-      theme = spicePkgs.themes.text;
+        theme = spicePkgs.themes.text;
 
-            colorScheme = "custom";
-
-
-            customColorScheme = {
-              text = "ffffff";
-              subtext = "999999";
-              main = "000000";
-              sidebar = "000000";
-              player = "000000";
-              card = "111111";
-              shadow = "000000";
-              selectedRow = "222222";
-              button = "ffffff";
-              buttonActive = "cccccc";
-              buttonDisabled = "444444";
-              tabActive = "222222";
-              notification = "111111";
-              notificationError = "ffffff";
-              misc = "333333";
-            };
+        colorScheme = "custom";
 
 
-      enabledExtensions = with spicePkgs.extensions; [
-        adblock
-        hidePodcasts
-        shuffle
-      ];
-    };
-    home.file.".local/share/icons/Papirus-Dark".source = "${config.gtk.iconTheme.package}/share/icons/Papirus-Dark";
-    home.file.".local/share/themes/Graphite-Mono".source = "${config.gtk.theme.package}/share/themes/Graphite-Mono";
-    dconf.settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
+        customColorScheme = {
+          text = "ffffff";
+          subtext = "999999";
+          main = "000000";
+          sidebar = "000000";
+          player = "000000";
+          card = "111111";
+          shadow = "000000";
+          selectedRow = "222222";
+          button = "ffffff";
+          buttonActive = "cccccc";
+          buttonDisabled = "444444";
+          tabActive = "222222";
+          notification = "111111";
+          notificationError = "ffffff";
+          misc = "333333";
         };
+
+
+        enabledExtensions = with spicePkgs.extensions; [
+          adblock
+          hidePodcasts
+          shuffle
+        ];
       };
-      qt = {
-            enable = true;
-            platformTheme.name = "gtk";
-            style.name = "adwaita-dark";
-          };
-    programs.micro = {
-      enable = true;
-      settings = {
-        colorscheme = "simple";
-      };
+  home.file.".local/share/icons/Papirus-Dark".source = "${config.gtk.iconTheme.package}/share/icons/Papirus-Dark";
+  home.file.".local/share/themes/Graphite-Mono".source = "${config.gtk.theme.package}/share/themes/Graphite-Mono";
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
     };
+  };
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk";
+    style.name = "adwaita-dark";
+  };
+  programs.micro = {
+    enable = true;
+    settings = {
+      colorscheme = "simple";
+    };
+  };
+
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   home.packages = with pkgs; [
 
     firefox
@@ -240,36 +250,38 @@ programs.spicetify =
   ];
   programs.fish.shellAliases = {
 
-    };
+  };
 
   programs.emacs = {
-  enable = true;
-  extraPackages = epkgs: with epkgs; [
-    use-package
-    which-key
-    vertico
-    orderless
-    marginalia
-    consult
-    embark
-    embark-consult
-    avy
-    corfu
-    cape
-    kind-icon
-    nix-mode
-    powershell
-    nasm-mode
-    disaster
-    x86-lookup
-    magit
-    envrc
-    vterm
-    pdf-tools
-    mood-line
-    dashboard
-  ];
-};
+    enable = true;
+    extraPackages = epkgs: with epkgs; [
+      use-package
+      which-key
+      vertico
+      orderless
+      marginalia
+      consult
+      embark
+      embark-consult
+      avy
+      corfu
+      cape
+      kind-icon
+      nix-mode
+      powershell
+      nasm-mode
+      disaster
+      x86-lookup
+      magit
+      envrc
+      vterm
+      pdf-tools
+      mood-line
+      dashboard
+      org-roam
+      org-noter
+    ];
+  };
 
 
   programs.home-manager.enable = true;

@@ -219,18 +219,16 @@
 
 (use-package eglot
   :ensure nil
-  :hook ((nix-mode . eglot-ensure)
-         (python-mode
+  :hook ((nix-mode
+          python-mode
           powershell-mode
           scheme-mode
           c-mode
           c++-mode) . eglot-ensure)
   :config
-  (add-to-list 'eglot-server-programs
-               '(nix-mode . ("nixd")))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nixd")))
   (setq-default eglot-workspace-configuration
-                '(:nixd (:formatting (:command ["nixfmt"]))))
-  )
+                '(:nixd (:formatting (:command ["nixfmt"])))))
 
 
 (use-package python
