@@ -213,20 +213,24 @@
   "Format the buffer through the language server when saving."
   (add-hook 'before-save-hook #'eglot-format-buffer nil t))
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 (use-package eglot
   :ensure nil
-  :hook ((python-mode
+  :hook ((nix-mode . eglot-ensure)
+         (python-mode
           powershell-mode
           scheme-mode
           c-mode
           c++-mode) . eglot-ensure)
-  :custom
-  (eglot-autoshutdown t)
-  (eglot-events-buffer-size 0)
   :config
-  (add-hook 'eglot-managed-mode-hook #'birdmacs/eglot-format-on-save)
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("pyright-langserver" "--stdio"))))
+               '(nix-mode . ("nixd")))
+  (setq-default eglot-workspace-configuration
+                '(:nixd (:formatting (:command ["nixfmt"]))))
+  )
+
 
 (use-package python
   :ensure nil

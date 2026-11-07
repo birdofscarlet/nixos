@@ -24,7 +24,7 @@
         specialArgs = { inherit inputs; };
         
         modules = [
-          ./hosts/nixos/configuration.nix
+          ./hosts/alicebox/configuration.nix
           nix-flatpak.nixosModules.nix-flatpak 
           home-manager.nixosModules.home-manager
           {

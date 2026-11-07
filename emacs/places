@@ -1,2 +1,10 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-nil
+(("/home/cardinal/nixconfig/dotfiles/alicebox/vesktop-theme.css" . 459)
+ ("/home/cardinal/nixconfig/emacs/"
+  (dired-filename . "/home/cardinal/nixconfig/emacs/init.el"))
+ ("/home/cardinal/nixconfig/emacs/init.el" . 1040)
+ ("/home/cardinal/" (dired-filename . "/home/cardinal/nixconfig"))
+ ("/home/cardinal/nixconfig/flake.nix" . 819)
+ ("/home/cardinal/nixconfig/"
+  (dired-filename . "/home/cardinal/nixconfig/home.nix"))
+ ("/home/cardinal/nixconfig/home.nix" . 107))
