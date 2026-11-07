@@ -72,7 +72,7 @@ services.keyd = {
 
   networking.hostName = "alicebox";
   networking.networkmanager.enable = true;
-  time.timeZone = "US/Chicago";
+  time.timeZone = "America/Chicago";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
