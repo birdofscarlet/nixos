@@ -1,0 +1,32 @@
+# nix build outputs
+result
+result-*
+
+# direnv / dev shells
+.direnv/
+
+# VM images from `nixos-rebuild build-vm`
+*.qcow2
+
+# editor junk
+*~
+\#*\#
+.\#*
+*.swp
+*.elc
+*.eln
+
+# secrets: never commit
+*.ovpn
+.env
+.env.*
+*.key
+*.pem
+*.age
+secrets/
+
+# personal start-page links stay local
+startpage/links.local.js
+
+*.bak
+# NOT ignored on purpose: flake.lock, hardware-configuration.nix
