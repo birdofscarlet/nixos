@@ -1,14 +1,8 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix ../../modules/nixos ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options= "--delete-older-than 7d";
-  };
   services.printing.enable = true;
   services.printing.drivers = [ pkgs.cnijfilter2 ];
 systemd.services.simple-input-overlay = {
@@ -78,34 +72,8 @@ fileSystems."/mnt/storage" = {
 
   networking.hostName = "alicebox";
   networking.networkmanager.enable = true;
-  time.timeZone = "America/Chicago";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-    options = "grp:alt_shift_toggle";
-  };
 
   # --- CORE SERVICES,SYSTEM PROGRAMS ---
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-  };
 
   services.greetd = {
     enable = true;
@@ -164,8 +132,6 @@ fileSystems."/mnt/storage" = {
       nautilus
       bubblewrap
     ];
-
-  nixpkgs.config.allowUnfree = true;
 
   users.users.cardinal = {
     isNormalUser = true;
