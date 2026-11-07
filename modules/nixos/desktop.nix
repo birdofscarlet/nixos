@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 {
+
   services.greetd = {
     enable = true;
     settings = {
@@ -10,7 +11,6 @@
       };
     };
   };
-  programs.niri.enable = true;
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
@@ -26,5 +26,7 @@
     jetbrains-mono
   ];
 
-    services.printing.enable = true;
+  programs.niri.enable = true;
+  programs.dconf.enable = true;
+  services.printing.enable = true;
 }

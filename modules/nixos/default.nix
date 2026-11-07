@@ -8,5 +8,9 @@
     ./boot.nix
     ./desktop.nix
     ./gaming.nix
+    ./users.nix
+    ./networking.nix
+    ./basepkgs.nix
+    ./theme.nix
   ];
 }
