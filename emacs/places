@@ -1,18 +1,19 @@
 ;;; -*- coding: utf-8; mode: lisp-data -*-
-(("/home/cardinal/nixconfig/emacs/init.el" . 6481)
- ("/home/cardinal/.config/fish/config.fish" . 123)
- ("/home/cardinal/nixconfig/home.nix" . 107)
- ("/home/cardinal/nixconfig/hosts/alicebox/configuration.nix" . 517)
- ("/home/cardinal/nixconfig/hosts/alicebox/"
-  (dired-filename . "/home/cardinal/nixconfig/hosts"))
- ("/home/cardinal/nixconfig/hosts/"
-  (dired-filename . "/home/cardinal/nixconfig"))
- ("/home/cardinal/nixconfig/"
+(("/home/cardinal/nixconfig/home.nix" . 1906)
+ ("/home/cardinal/nixconfig/emacs/init.el" . 11567)
+ ("/home/cardinal/nixconfig/dotfiles/alicebox/"
   (dired-filename . "/home/cardinal/nixconfig/dotfiles"))
  ("/home/cardinal/nixconfig/dotfiles/"
-  (dired-filename . "/home/cardinal/nixconfig/dotfiles/alicebox"))
- ("/home/cardinal/nixconfig/dotfiles/alicebox/"
-  (dired-filename . "/home/cardinal/nixconfig/dotfiles/alicebox/kitty"))
+  (dired-filename . "/home/cardinal/nixconfig"))
+ ("/home/cardinal/nixconfig/"
+  (dired-filename . "/home/cardinal/nixconfig/hosts"))
+ ("/home/cardinal/nixconfig/hosts/"
+  (dired-filename . "/home/cardinal/nixconfig/hosts/alicebox"))
+ ("/home/cardinal/nixconfig/hosts/alicebox/"
+  (dired-filename
+   . "/home/cardinal/nixconfig/hosts/alicebox/configuration.nix"))
+ ("/home/cardinal/nixconfig/hosts/alicebox/configuration.nix" . 1881)
+ ("/home/cardinal/.config/fish/config.fish" . 123)
  ("/home/cardinal/nixconfig/dotfiles/alicebox/kitty/"
   (dired-filename
    . "/home/cardinal/nixconfig/dotfiles/alicebox/kitty/kitty.conf"))

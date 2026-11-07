@@ -82,7 +82,7 @@ output "DP-2" {
 
 // ── layout ──────────────────────────────────────────────────────────
 layout {
-    gaps 8
+    gaps 4
     center-focused-column "never"
     background-color "transparent"
     default-column-width { proportion 0.5; }
