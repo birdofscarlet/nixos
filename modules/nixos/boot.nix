@@ -10,7 +10,7 @@
     enable = true;
     efiSupport = true;
     device = "nodev";
-    useOSProber = true;
+  #  useOSProber = true; <--- uncomment if windows install on other drive
   };
 
   boot.consoleLogLevel = 0;
