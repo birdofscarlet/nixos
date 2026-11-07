@@ -40,6 +40,15 @@ systemd.services.simple-input-overlay = {
     RestartSec = 3;
   };
 };
+
+services.keyd = {
+  enable = true;
+  keyboards.default = {
+    ids = [ "*" ];
+    settings.main.capslock = "leftcontrol";
+  };
+};
+
   # --- BOOT,HARDWARE ---
   boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -58,7 +67,7 @@ systemd.services.simple-input-overlay = {
     enable = true;
     enable32Bit = true;
   };
-  
+
   programs.dconf.enable = true;
 
   networking.hostName = "alicebox";
@@ -105,7 +114,7 @@ systemd.services.simple-input-overlay = {
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true; 
+    dedicatedServer.openFirewall = true;
     extraCompatPackages = with pkgs; [ proton-ge-bin ];
   };
   programs.obs-studio = {
@@ -117,7 +126,7 @@ systemd.services.simple-input-overlay = {
   		obs-vkcapture
   	];
   };
-  
+
   programs.gamemode.enable = true;
   programs.niri.enable = true;
   programs.fish.enable = true;
@@ -138,7 +147,7 @@ systemd.services.simple-input-overlay = {
   services.flatpak.packages = [
     "flathub;org.vinegarhq.Sober"
   ];
-  
+
   environment.systemPackages = with pkgs; [
       config.home-manager.users.cardinal.gtk.theme.package
       git
@@ -163,5 +172,5 @@ systemd.services.simple-input-overlay = {
       jetbrains-mono
     ];
 
-  system.stateVersion = "25.11"; 
+  system.stateVersion = "25.11";
 }
