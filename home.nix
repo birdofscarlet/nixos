@@ -169,7 +169,6 @@ programs.spicetify =
 
     firefox
     vesktop
-    signal-desktop
 
     mpv
     imv
