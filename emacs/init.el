@@ -36,6 +36,7 @@
   (make-directory backup-dir t)
   (setq backup-directory-alist `((".*" . ,backup-dir))))
 
+
 ;; ---------------------------------- ;;
 ;;            APPEARANCE              ;;
 ;; ---------------------------------- ;;
@@ -105,7 +106,7 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)
 
 (use-package which-key
   :config

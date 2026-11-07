@@ -19,8 +19,7 @@ xdg.configFile = {
     "qt5ct".source = ./dotfiles/alicebox/qt5ct;
     "qt6ct".source = ./dotfiles/alicebox/qt6ct;
     "niri".source = ./dotfiles/alicebox/niri;
-    
-    
+    "emacs".source = ./emacs;
   };
 
     gtk = {
@@ -190,8 +189,7 @@ programs.spicetify =
     cmatrix
     peaclock
     prismlauncher
-    emacs
-
+ 
     waybar
     swaybg
     fuzzel
@@ -243,6 +241,36 @@ programs.spicetify =
   programs.fish.shellAliases = {
 
     };
+
+  programs.emacs = {
+  enable = true;
+  extraPackages = epkgs: with epkgs; [
+    use-package
+    which-key
+    vertico
+    orderless
+    marginalia
+    consult
+    embark
+    embark-consult
+    avy
+    corfu
+    cape
+    kind-icon
+    nix-mode
+    powershell
+    nasm-mode
+    disaster
+    x86-lookup
+    magit
+    envrc
+    vterm
+    pdf-tools
+    mood-line
+    dashboard
+  ];
+};
+
 
   programs.home-manager.enable = true;
 }
