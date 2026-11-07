@@ -1,12 +1,12 @@
 { config, pkgs, inputs, ... }:
-	
+
 {
   home.username = "cardinal";
   home.homeDirectory = "/home/cardinal";
   home.stateVersion = "25.11";
   home.sessionPath = [ "$HOME/.local/bin" ];
 
-imports = [ 
+imports = [
     inputs.spicetify-nix.homeManagerModules.default
   ];
 xdg.configFile = {
@@ -41,7 +41,7 @@ xdg.configFile = {
         package = (pkgs.papirus-icon-theme.override { color = "violet"; }).overrideAttrs { dontFixup = true; };
       };
     };
-  
+
 programs.firefox.profiles."cardinal".settings = {
     "widget.wayland.transparent-background" = true;
     "widget.transparent-windows" = true;
@@ -116,30 +116,30 @@ programs.spicetify =
     in
     {
       enable = true;
-      
+
       theme = spicePkgs.themes.text;
-    
-            colorScheme = "custom"; 
-            
-            
+
+            colorScheme = "custom";
+
+
             customColorScheme = {
-              text = "ffffff";         
-              subtext = "999999";      
-              main = "000000";        
-              sidebar = "000000";     
-              player = "000000";       
-              card = "111111";         
-              shadow = "000000";       
-              selectedRow = "222222";   
-              button = "ffffff";   
+              text = "ffffff";
+              subtext = "999999";
+              main = "000000";
+              sidebar = "000000";
+              player = "000000";
+              card = "111111";
+              shadow = "000000";
+              selectedRow = "222222";
+              button = "ffffff";
               buttonActive = "cccccc";
               buttonDisabled = "444444";
-              tabActive = "222222";  
-              notification = "111111"; 
-              notificationError = "ffffff"; 
+              tabActive = "222222";
+              notification = "111111";
+              notificationError = "ffffff";
               misc = "333333";
             };
-      
+
 
       enabledExtensions = with spicePkgs.extensions; [
         adblock
@@ -166,7 +166,7 @@ programs.spicetify =
       };
     };
   home.packages = with pkgs; [
-    
+
     firefox
     vesktop
     signal-desktop
@@ -189,7 +189,7 @@ programs.spicetify =
     cmatrix
     peaclock
     prismlauncher
- 
+
     waybar
     swaybg
     fuzzel
@@ -202,6 +202,7 @@ programs.spicetify =
     slurp
     xwayland-satellite
     libnotify
+    tree
 
     kdePackages.breeze
     kdePackages.qt6ct
@@ -230,10 +231,10 @@ programs.spicetify =
       if [ -s "$TMP_FILE" ]; then
           SELECTED=$(cat "$TMP_FILE")
           echo "$SELECTED" > "$CACHE_FILE"
-          
+
           ${psmisc}/bin/killall swaybg 2>/dev/null || true
           ${swaybg}/bin/swaybg -i "$SELECTED" -m fill &
-          
+
           rm "$TMP_FILE"
       fi
     '')

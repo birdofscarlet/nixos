@@ -49,6 +49,12 @@ services.keyd = {
   };
 };
 
+fileSystems."/mnt/storage" = {
+  device = "/dev/disk/by-label/storage";
+  fsType = "btrfs";
+  options = [ "compress=zstd" "noatime" "nofail" ];
+};
+
   # --- BOOT,HARDWARE ---
   boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
