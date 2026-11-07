@@ -179,6 +179,7 @@
 
     firefox
     vesktop
+    signal-desktop
 
     mpv
     imv
