@@ -41,7 +41,7 @@ in
   # Left exactly as it was; pick one route later.
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
     style.name = "adwaita-dark";
   };
 
