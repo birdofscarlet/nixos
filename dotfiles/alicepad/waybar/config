@@ -8,8 +8,7 @@
         "niri/workspaces"
     ],
     "modules-center": [
-        "clock",
-        "niri/window"
+        "clock"
     ],
     "modules-right": [
     	  "tray",
@@ -27,13 +26,6 @@
         "disable-scroll": true
     },
 
-    "niri/window": {
-        "format": "{title}",
-        "icon": false,
-        "icon-size": 16,
-        "separate-outputs": true
-    },
-
     "clock": {
         "format": "{:%a, %b %d  %H:%M}",
         "tooltip": false
@@ -43,8 +35,7 @@
     "pulseaudio": {
         "format": "vol: {volume}",
         "format-muted": "mute",
-        "on-click": "pavucontrol",
-        "scroll-step": 2
+        "on-click": "pavucontrol"
     },
 
     "pulseaudio#microphone": {
@@ -56,11 +47,17 @@
         "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-",
         "scroll-step": 5
     },
+    "custom/power": {
+        "format": "⏻",
+        "on-double-click": "systemctl poweroff",
+        "on-double-click-right": "systemctl reboot",
+        "tooltip": false
+    },
     "backlight": {
         "format": "bri: {percent}",
-        "tooltip": false,
-        "on-scroll-up": "brightnessctl set 2%+",
-        "on-scroll-down": "brightnessctl set 2%-"
+        "on-scroll-up": "brightnessctl set 5%+",
+        "on-scroll-down": "brightnessctl set 5%-",
+        "tooltip": false
     },
     "battery": {
     "states": {

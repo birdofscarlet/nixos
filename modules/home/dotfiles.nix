@@ -1,16 +1,18 @@
-{ ... }:
+{ hostname, ... }:
 
 let
-  dots = ../../dotfiles/alicebox;
+  common = ../../dotfiles/common;
+  host = ../../dotfiles/${hostname};
 in
 {
   xdg.configFile = {
-    "niri".source = "${dots}/niri";
-    "waybar".source = "${dots}/waybar";
-    "fuzzel".source = "${dots}/fuzzel";
-    "fnott".source = "${dots}/fnott";
-    "kitty".source = "${dots}/kitty";
-    "fastfetch".source = "${dots}/fastfetch";
-    "btop".source = "${dots}/btop";
+    "niri/config.kdl".source = "${common}/niri/config.kdl";
+    "niri/host.kdl".source = "${host}/niri/host.kdl";
+    "waybar".source = "${host}/waybar";
+    "fuzzel".source = "${common}/fuzzel";
+    "fnott".source = "${common}/fnott";
+    "kitty".source = "${common}/kitty";
+    "fastfetch".source = "${common}/fastfetch";
+    "btop".source = "${common}/btop";
   };
 }

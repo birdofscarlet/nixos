@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  dots = ../../dotfiles/alicebox;
+  dots = ../../dotfiles/common;
 in
 {
   gtk = {

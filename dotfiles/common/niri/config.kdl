@@ -61,16 +61,6 @@ input {
     focus-follows-mouse
 }
 
-// ── outputs ─────────────────────────────────────────────────────────
-output "DP-3" {
-    mode "1920x1080"
-    position x=0 y=0
-}
-output "DP-2" {
-    mode "1920x1080"
-    position x=1920 y=0
-}
-
 // ── layout ──────────────────────────────────────────────────────────
 layout {
     gaps 4
@@ -268,3 +258,6 @@ binds {
     Ctrl+Alt+Delete { quit; }
     Mod+Shift+P     { power-off-monitors; }
 }
+
+// ── host ────────────────────────────────────────────────────────────
+include "host.kdl"

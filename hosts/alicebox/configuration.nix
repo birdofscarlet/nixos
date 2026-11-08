@@ -1,10 +1,13 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
     ../../modules/nixos
     ../../modules/nixos/gpu-amd.nix
+    ../../modules/nixos/kernel-cachyos.nix
+    ../../modules/nixos/backup.nix
+    ../../modules/nixos/obs.nix
   ];
 
   fileSystems."/mnt/storage" = {

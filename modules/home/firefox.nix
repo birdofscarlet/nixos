@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  dots = ../../dotfiles/alicebox;
+  dots = ../../dotfiles/common;
   repo = "${config.home.homeDirectory}/nixconfig";
   startpage = "file://${config.home.homeDirectory}/startpage/index.html";
 in

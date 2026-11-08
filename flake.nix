@@ -8,6 +8,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -44,7 +48,8 @@
     in
     {
       nixosConfigurations = {
-        alicebox = mkHost "alicebox" ./modules/home;
+        alicebox = mkHost "alicebox" ./hosts/alicebox/home.nix;
+        alicepad = mkHost "alicepad" ./hosts/alicepad/home.nix;
       };
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
     };
