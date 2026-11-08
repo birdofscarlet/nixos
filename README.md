@@ -22,7 +22,9 @@ it's a flake, with home manager pulled in as a nixos module.
 - **browser:** firefox with a transparent userchrome and a tui-style start page (`startpage/`) for home and new tabs
 - **kernel / hardware:** cachyos kernel (latest, zen 4 build) from its binary cache, early amdgpu kms, amd microcode, fwupd for device firmware
 - **backups:** restic, daily, home dir to the storage drive (steam library and caches left out)
-- **other:** spotify via spicetify, steam + gamemode, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
+- **creative:** krita, aseprite, davinci resolve (the free one, opencl through rocm), obs studio with a virtual camera, pipewire screen + per-app audio capture, vaapi encoding and vulkan game capture
+- **games:** steam + gamemode, ring racers, prism launcher
+- **other:** spotify via spicetify, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
 
 ## layout
 
@@ -41,9 +43,10 @@ it's a flake, with home manager pulled in as a nixos module.
 │   │   ├── boot.nix                grub, cachyos kernel + cache, vmware module fix
 │   │   ├── desktop.nix             greetd + tuigreet, niri, fonts, gtk theme, keyd
 │   │   ├── gaming.nix              steam, proton-ge, gamemode
-│   │   ├── gpu-amd.nix             early amdgpu kms (imported per host)
+│   │   ├── gpu-amd.nix             early amdgpu kms, rocm opencl (imported per host)
 │   │   ├── hardware.nix            pipewire, graphics, bluetooth, fwupd
 │   │   ├── nix.nix                 flakes, gc, store optimise, nix-ld
+│   │   ├── obs.nix                 obs studio, virtual camera, plugins
 │   │   ├── security.nix            wireshark
 │   │   └── virtualisation.nix      vmware workstation, podman + distrobox
 │   └── home/                       home manager modules
@@ -51,7 +54,7 @@ it's a flake, with home manager pulled in as a nixos module.
 │       ├── dotfiles.nix            links dotfiles/<host>/ into ~/.config
 │       ├── emacs.nix               emacs packages, live-linked init.el
 │       ├── firefox.nix             profile, userchrome, start page as home + new tab
-│       ├── packages.nix            apps, media, terminal, desktop plumbing
+│       ├── packages.nix            apps, games, art, video, media, terminal, desktop plumbing
 │       ├── scripts.nix             toggle-mic, wallpicker
 │       ├── security.nix            htb / reversing / pwn tools, asm-lsp config
 │       ├── shell.nix               fish + nix abbreviations, direnv, micro
@@ -156,6 +159,10 @@ boxes share your home dir, so clone aur stuff somewhere that isn't this repo.
 - **cachyos kernel:** uses the `pinned` overlay so kernels come from the
   `cache.lantian.pub` binary cache. on a fresh install, switch once with the cache
   settings before turning the kernel on, or it gets compiled locally.
+- **davinci resolve:** the free linux version can't import or export h.264/h.265 or aac, so
+  transcode to dnxhr/prores with ffmpeg first, or just use kdenlive for those.
+- **obs on niri:** use the "screen capture (pipewire)" source. for game capture, launch games
+  with `obs-gamecapture %command%`.
 - **python tools:** pwntools already ships `ROPgadget` and `checksec`, so don't add those as separate packages.
 
 ### backups
