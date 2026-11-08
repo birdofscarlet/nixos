@@ -110,6 +110,21 @@ fish abbreviations. they expand in place, so you see the whole command before it
 
 there's also two functions: `nrbd` builds and shows `nix store diff-closures` against the running system, and `nfmt` runs `nix fmt` in the repo.
 
+### niri keys
+
+the ones i added on top of niri's defaults (`Mod+Shift+/` shows all of them):
+
+| key | does |
+|---|---|
+| `Mod+Return` | kitty |
+| `Mod+D` | fuzzel |
+| `Mod+B` | firefox |
+| `Mod+E` / `Mod+Shift+E` | emacs frame / emacs in kitty |
+| `Mod+Space` | clipboard history |
+| `Mod+M` | wallpicker |
+| `Mod+Shift+M` | toggle mic |
+| `Ctrl+Alt+Delete` | quit niri |
+
 ### live-editable files
 
 these are symlinked to the repo, so edits kick in without a rebuild:
