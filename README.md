@@ -52,6 +52,25 @@ nix fmt                                      # format all nix files
 Flakes only see files tracked by git, so `git add` new files before building.
 Run `git` as your own user, not under `sudo`.
 
+### Shell shortcuts
+
+fish abbreviations (they expand in place, so you see the full command before it runs):
+
+| Abbr | Expands to |
+|---|---|
+| `nrbs` / `nrbt` / `nrbo` | `sudo nixos-rebuild switch` / `test` / `boot --flake ~/nixconfig` |
+| `nrbb` | `nixos-rebuild build --flake ~/nixconfig` |
+| `nrbr` | `sudo nixos-rebuild switch --rollback` |
+| `ngen` | `nixos-rebuild list-generations` |
+| `nfu` / `nfc` | `nix flake update` / `nix flake check` on the repo |
+| `nrepl` | `nix repl` with this flake loaded |
+| `nse` | `nix search nixpkgs` |
+| `nsh` / `nrun` | `nix shell nixpkgs#` / `nix run nixpkgs#`, cursor after the `#` |
+| `ngc` | `sudo nix-collect-garbage --delete-older-than 7d` |
+| `nopt` | `nix store optimise` |
+
+Functions: `nrbd` builds and shows `nix store diff-closures` against the running system; `nfmt` runs `nix fmt` in the repo.
+
 ### Live-editable files
 
 These are symlinked to the repo, so edits take effect without a rebuild:
