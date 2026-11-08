@@ -1,4 +1,3 @@
-# Packages come from Nix; init.el and themes are live-linked from the repo.
 { config, ... }:
 
 let
@@ -8,36 +7,37 @@ in
 {
   programs.emacs = {
     enable = true;
-    extraPackages = epkgs: with epkgs; [
-      use-package
-      which-key
-      vertico
-      orderless
-      marginalia
-      consult
-      embark
-      embark-consult
-      avy
-      corfu
-      cape
-      kind-icon
-      nix-mode
-      powershell
-      nasm-mode
-      disaster
-      x86-lookup
-      rmsbolt
-      nhexl-mode
-      elf-mode
-      magit
-      envrc
-      vterm
-      pdf-tools
-      mood-line
-      dashboard
-      org-roam
-      org-noter
-    ];
+    extraPackages =
+      epkgs: with epkgs; [
+        use-package
+        which-key
+        vertico
+        orderless
+        marginalia
+        consult
+        embark
+        embark-consult
+        avy
+        corfu
+        cape
+        kind-icon
+        nix-mode
+        powershell
+        nasm-mode
+        disaster
+        x86-lookup
+        rmsbolt
+        nhexl-mode
+        elf-mode
+        magit
+        envrc
+        vterm
+        pdf-tools
+        mood-line
+        dashboard
+        org-roam
+        org-noter
+      ];
   };
 
   xdg.configFile = {

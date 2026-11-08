@@ -1,10 +1,6 @@
-// niri config (cleaned up). Docs: https://yalter.github.io/niri/
-// Mod = Super on a real session, Alt when niri runs nested in a window.
-
 // ── startup ─────────────────────────────────────────────────────────
 spawn-at-startup "waybar"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-// restore the wallpaper last chosen with `wallpicker` (falls back to default.jpg)
 spawn-sh-at-startup "swaybg -i \"$(cat ~/.cache/current_wallpaper 2>/dev/null || echo ~/Pictures/Wallpapers/default.jpg)\" -m fill"
 
 // ── general ─────────────────────────────────────────────────────────
@@ -17,8 +13,6 @@ cursor {
     xcursor-theme "breeze_cursors"
     xcursor-size 24
 }
-// Pins rendering to one GPU. Check which node is your dGPU:
-//   ls -l /dev/dri/by-path
 debug { render-drm-device "/dev/dri/renderD128"; }
 
 overview {
@@ -39,7 +33,6 @@ layer-rule {
     place-within-backdrop true
 }
 
-// waybar (bar), fuzzel (launcher), fnott (notifications)
 layer-rule {
     match namespace="^waybar$"
     match namespace="^launcher$"
@@ -62,15 +55,13 @@ input {
         natural-scroll
     }
     mouse {
-        // -1.0 (slowest) to 1.0 (fastest); tune to taste
         accel-speed -0.9
     }
 
     focus-follows-mouse
 }
 
-// ── outputs (names from `niri msg outputs`) ─────────────────────────
-// refresh rate omitted = highest available for the resolution
+// ── outputs ─────────────────────────────────────────────────────────
 output "DP-3" {
     mode "1920x1080"
     position x=0 y=0
@@ -107,8 +98,7 @@ layout {
     }
 }
 
-// ── window rules (later rules override earlier ones) ────────────────
-// every window
+// ── window rules ────────────────────────────────────────────────────
 window-rule {
     draw-border-with-background false
     background-effect { blur true; }
@@ -122,7 +112,6 @@ window-rule {
     match app-id="steam"
     opacity 0.95
 }
-// Firefox picture-in-picture floats
 window-rule {
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true

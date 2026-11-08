@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    # apps (firefox comes from programs.firefox)
+    # apps
     vesktop
     signal-desktop
     gimp

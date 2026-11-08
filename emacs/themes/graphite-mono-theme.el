@@ -1,11 +1,5 @@
 ;;; graphite-mono-theme.el --- Monochrome UI, muted syntax accents -*- lexical-binding: t; -*-
 
-;;; Commentary:
-;; Pure-black grayscale UI meant for translucent frames.  Layer it over
-;; modus-vivendi so faces it doesn't define (magit, diagnostics) stay sane:
-;;   (load-theme 'modus-vivendi t)
-;;   (load-theme 'graphite-mono t)
-
 ;;; Code:
 
 (deftheme graphite-mono "Pure-black monochrome UI with muted syntax accents.")
@@ -36,7 +30,7 @@
    `(lazy-highlight ((t (:foreground ,fg :background ,bg-3))))
    `(mode-line ((t (:foreground ,fg :background ,bg-1 :box nil))))
    `(mode-line-inactive ((t (:foreground ,mid :background ,bg :box nil))))
-   ;; code (muted accents)
+   ;; code
    `(font-lock-comment-face ((t (:foreground ,mid :slant italic))))
    `(font-lock-doc-face ((t (:foreground ,mid))))
    `(font-lock-string-face ((t (:foreground "#a3be8c"))))

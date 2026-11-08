@@ -1,8 +1,7 @@
 "use strict";
 
-// --- pure helpers (also exercised by tests under node) -------------------
+// --- pure helpers ------------------------------------------------------
 
-// Merge link groups by title, so links.local.js can add to a public group.
 function mergeGroups(base, extra) {
   const out = [];
   const index = new Map();
@@ -18,13 +17,11 @@ function mergeGroups(base, extra) {
   return out;
 }
 
-// Every word in the query must appear in group title, link name or url.
 function matches(group, link, query) {
   const hay = (group.title + " " + link.name + " " + link.url).toLowerCase();
   return query.toLowerCase().split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
 }
 
-// Turn free text into a URL: explicit url, bare domain, or a web search.
 function resolveQuery(text, searchUrl) {
   const s = text.trim();
   if (s.startsWith("?")) return searchUrl + encodeURIComponent(s.slice(1).trim());
@@ -50,7 +47,7 @@ function init() {
 
     const items = [];
     for (const l of g.links) {
-      if (!/^(https?|file):/i.test(l.url)) continue; // never render javascript: etc.
+      if (!/^(https?|file):/i.test(l.url)) continue;
       const a = document.createElement("a");
       a.href = l.url;
       a.textContent = l.name;
@@ -64,7 +61,7 @@ function init() {
 
   let visible = [];
   let sel = 0;
-  let navigated = false; // true once the arrow keys have been used
+  let navigated = false;
 
   function paint() {
     for (const c of cards) for (const it of c.items) it.a.classList.remove("sel");
@@ -114,7 +111,6 @@ function init() {
       else location.href = url;
       return;
     }
-    // typing anywhere goes to the prompt
     if (document.activeElement !== input && e.key.length === 1 &&
         !e.ctrlKey && !e.metaKey && !e.altKey) input.focus();
   });

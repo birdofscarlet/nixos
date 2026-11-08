@@ -203,11 +203,6 @@
 ;;        ASSEMBLY + REVERSING        ;;
 ;; ---------------------------------- ;;
 
-;; .asm/.nasm -> nasm-mode (Intel syntax); .s/.S stay in built-in asm-mode (GAS).
-;; In nasm-mode:  C-c C-c build   C-c C-r run in vterm
-;;                C-c C-d gdb (many-windows)   C-c C-g gef in vterm
-;; A Makefile next to the file wins over the default nasm+ld command.
-
 (defun birdmacs/asm-binary ()
   "Executable name for the current assembly buffer."
   (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
@@ -261,8 +256,6 @@
 
 (add-hook 'asm-mode-hook #'birdmacs/asm-setup)
 
-;; asm-lsp: hover docs for instructions/registers + nasm diagnostics.
-;; Global config in ~/.config/asm-lsp (from modules/home/security.nix).
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs '((nasm-mode asm-mode) . ("asm-lsp"))))
 (add-hook 'nasm-mode-hook #'eglot-ensure)
@@ -274,8 +267,6 @@
   (gdb-show-main t)
   (gdb-restore-window-configuration-after-quit t))
 
-;; C -> assembly. disaster: objdump of the object for the line at point.
-;; rmsbolt: live compiler-explorer view (M-x rmsbolt in a C buffer).
 (use-package disaster
   :bind ("C-c d" . disaster)
   :custom
@@ -289,7 +280,6 @@
   :bind ("C-c x" . x86-lookup)
   :custom (x86-lookup-pdf (expand-file-name "~/docs/intel-sdm.pdf")))
 
-;; binaries: hex view and readelf-style view
 (use-package nhexl-mode :commands nhexl-mode)
 (use-package elf-mode
   :commands elf-mode

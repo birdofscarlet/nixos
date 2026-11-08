@@ -1,5 +1,3 @@
-# Plain config directories copied into the store (rebuild to apply).
-# Live-editable files (emacs, startpage) are linked from their own modules.
 { ... }:
 
 let

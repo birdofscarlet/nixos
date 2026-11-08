@@ -1,4 +1,3 @@
-# Firefox profile, userChrome, and the start page.
 { config, ... }:
 
 let
@@ -22,7 +21,7 @@ in
         "browser.toolbars.bookmarks.visibility" = "never";
 
         # start page
-        "browser.startup.page" = 1; # 1 = open the homepage
+        "browser.startup.page" = 1;
         "browser.startup.homepage" = "file://${config.home.homeDirectory}/startpage/index.html";
         "browser.newtabpage.enabled" = false;
       };
@@ -30,6 +29,5 @@ in
     };
   };
 
-  # live-editable, no rebuild needed
   home.file."startpage".source = config.lib.file.mkOutOfStoreSymlink "${repo}/startpage";
 }

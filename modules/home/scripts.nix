@@ -1,4 +1,3 @@
-# Small helper scripts bound in niri (toggle-mic, wallpicker).
 { pkgs, ... }:
 
 {

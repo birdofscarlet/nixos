@@ -1,6 +1,3 @@
-// Public links, committed to git. Private links go in links.local.js (gitignored).
-// A group in links.local.js with the same title is merged into the group here.
-
 window.SEARCH_URL = "https://duckduckgo.com/?q=";
 
 window.LINKS = [

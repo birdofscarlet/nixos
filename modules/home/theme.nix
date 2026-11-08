@@ -1,4 +1,3 @@
-# GTK / icons / Qt / dark mode.
 { config, pkgs, ... }:
 
 let
@@ -27,8 +26,6 @@ in
     };
   };
 
-  # If a build complains about these two colliding with the gtk module,
-  # delete them; gtk already installs both themes.
   home.file.".local/share/icons/Papirus-Dark".source =
     "${config.gtk.iconTheme.package}/share/icons/Papirus-Dark";
   home.file.".local/share/themes/Graphite-Mono".source =
@@ -36,9 +33,6 @@ in
 
   dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
-  # NOTE: Qt theming is split between here (gtk platform theme), the linked
-  # qt5ct/qt6ct configs below, and QT_STYLE_OVERRIDE in modules/nixos/desktop.nix.
-  # Left exactly as it was; pick one route later.
   qt = {
     enable = true;
     platformTheme.name = "gtk3";

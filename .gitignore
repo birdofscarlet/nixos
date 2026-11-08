@@ -5,7 +5,7 @@ result-*
 # direnv / dev shells
 .direnv/
 
-# VM images from `nixos-rebuild build-vm`
+# VM images
 *.qcow2
 
 # editor junk
@@ -16,7 +16,7 @@ result-*
 *.elc
 *.eln
 
-# secrets: never commit
+# secrets
 *.ovpn
 .env
 .env.*
@@ -25,8 +25,7 @@ result-*
 *.age
 secrets/
 
-# personal start-page links stay local
+# start page
 startpage/links.local.js
 
 *.bak
-# NOT ignored on purpose: flake.lock, hardware-configuration.nix

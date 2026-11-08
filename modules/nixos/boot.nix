@@ -11,10 +11,12 @@
     efiSupport = true;
     device = "nodev";
     configurationLimit = 10;
-  #  useOSProber = true; <--- uncomment if windows install on other drive
   };
 
   boot.consoleLogLevel = 0;
-  boot.kernelParams = [ "quiet" "udev.log_level=3" ];
+  boot.kernelParams = [
+    "quiet"
+    "udev.log_level=3"
+  ];
 
 }

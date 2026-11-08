@@ -11,14 +11,21 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release"; # not wired up yet
-    textfox.url = "github:adriankarlen/textfox";                          # not wired up yet
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+    textfox.url = "github:adriankarlen/textfox";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... } @ inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
-      mkHost = hostname: homeFile:
+      mkHost =
+        hostname: homeFile:
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs hostname; };
@@ -39,7 +46,6 @@
     {
       nixosConfigurations = {
         alicebox = mkHost "alicebox" ./modules/home;
-        # alicepad = mkHost "alicepad" ./hosts/alicepad/home.nix;
       };
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
     };

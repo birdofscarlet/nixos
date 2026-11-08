@@ -1,10 +1,9 @@
-# Tools for HTB / reversing / pwn on the host. Heavier offensive tooling stays in the Kali VM.
 { pkgs, ... }:
 
 let
   pyEnv = pkgs.python3.withPackages (
     ps: with ps; [
-      pwntools # also provides ROPgadget and checksec
+      pwntools
       requests
       scapy
       impacket
@@ -14,12 +13,12 @@ let
 in
 {
   home.packages = with pkgs; [
-    # writing exploits and own tools
+    # exploit dev
     pyEnv
     nasm
     asm-lsp
     gdb
-    gef # `gef ./bin` = gdb with gef loaded; plain gdb stays clean for Emacs
+    gef
     patchelf
     pwninit
     one_gadget
@@ -32,10 +31,10 @@ in
     binwalk
     strace
     ltrace
-    poppler-utils # pdftotext, used by Emacs x86-lookup
+    poppler-utils
 
     # network / web
-    openvpn # HTB: sudo openvpn ~/htb/lab.ovpn
+    openvpn
     nmap
     netcat-openbsd
     socat
@@ -49,7 +48,6 @@ in
     exiftool
   ];
 
-  # global asm-lsp config: NASM syntax, x86-64. Per-project .asm-lsp.toml overrides it.
   xdg.configFile."asm-lsp/.asm-lsp.toml".text = ''
     [default_config]
     version = "${pkgs.asm-lsp.version}"
