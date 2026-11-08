@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>alicebox</title>
+<style>
+  :root {
+    --bg: #000000;
+    --fg: #ffffff;
+    --soft: #cccccc;
+    --sub: #999999;
+    --dim: #444444;
+    --line: #333333;
+    --sel: #222222;
+    --accent: #c4a7e7;   /* same violet as the Emacs theme and icon pack */
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font: 15px/1.6 "JetBrains Mono", ui-monospace, monospace;
+  }
+  main { max-width: 1000px; margin: 0 auto; padding: 8vh 24px 48px; }
+  header {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    color: var(--sub); margin-bottom: 28px;
+  }
+  .host { color: var(--accent); font-weight: 700; }
+  #clock { color: var(--fg); font-variant-numeric: tabular-nums; }
+  .prompt {
+    display: flex; gap: 1ch; align-items: center;
+    border: 1px solid var(--line); padding: 8px 12px; margin-bottom: 28px;
+  }
+  .prompt:focus-within { border-color: var(--accent); }
+  .prompt span { color: var(--accent); }
+  #q {
+    flex: 1; background: transparent; border: 0; outline: 0;
+    color: var(--fg); font: inherit; caret-color: var(--accent);
+  }
+  #q::placeholder { color: var(--dim); }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+  fieldset { border: 1px solid var(--line); margin: 0; padding: 6px 14px 12px; min-width: 0; }
+  fieldset.empty { display: none; }
+  legend { padding: 0 8px; color: var(--accent); }
+  a {
+    display: block; padding: 1px 6px; margin: 0 -6px;
+    color: var(--soft); text-decoration: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  a[hidden] { display: none; }
+  a::before { content: "> "; color: var(--dim); }
+  a:hover, a.sel { background: var(--sel); color: var(--fg); }
+  a:hover::before, a.sel::before { color: var(--accent); }
+  footer { margin-top: 32px; color: var(--dim); font-size: 12px; }
+  kbd { font: inherit; color: var(--sub); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div><span class="host">cardinal@alicebox</span> ~ startpage</div>
+    <div><span id="date"></span> <span id="clock"></span></div>
+  </header>
+
+  <label class="prompt">
+    <span>/</span>
+    <input id="q" type="text" autocomplete="off" spellcheck="false" autofocus
+           placeholder="filter links, or type a url / search">
+  </label>
+
+  <div id="grid"></div>
+
+  <footer>
+    <kbd>type</kbd> filter &middot; <kbd>&uarr;&darr;</kbd> select &middot;
+    <kbd>enter</kbd> open &middot; <kbd>ctrl+enter</kbd> new tab &middot;
+    <kbd>?</kbd> force web search &middot; <kbd>esc</kbd> clear
+  </footer>
+</main>
+
+<script src="links.js"></script>
+<script src="links.local.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

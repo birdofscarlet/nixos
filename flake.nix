@@ -38,7 +38,7 @@
     in
     {
       nixosConfigurations = {
-        alicebox = mkHost "alicebox" ./home.nix;
+        alicebox = mkHost "alicebox" ./modules/home;
         # alicepad = mkHost "alicepad" ./hosts/alicepad/home.nix;
       };
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;

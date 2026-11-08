@@ -1,0 +1,49 @@
+*, *::before, *::after {
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 11pt !important;
+  border-radius: 0 !important;
+}
+
+:root {
+  --lwt-accent-color: transparent !important;
+  --lwt-accent-color-inactive: transparent !important;
+  --toolbar-bgcolor: transparent !important;
+  --toolbar-background-color: transparent !important;
+  --panel-background: rgba(0, 0, 0, 0.7) !important;
+  --panel-color: #ffffff !important;
+  --sidebar-border-color: #141414 !important;
+  color: #ffffff !important;
+}
+
+:root, window, body {
+  background: transparent !important;
+  appearance: none !important;
+}
+
+#navigator-toolbox, #sidebar-box, #sidebar-main {
+  background: rgba(0, 0, 0, 0.7) !important;
+  color: #ffffff !important;
+  appearance: none !important;
+}
+
+#navigator-toolbox toolbar, #TabsToolbar, #nav-bar, #PersonalToolbar,
+.browser-toolbox-background {
+  background: transparent !important;
+  background-image: none !important;
+  appearance: none !important;
+}
+
+#sidebar-main, #sidebar-box, #sidebar-splitter, #sidebar-launcher-splitter, #vertical-tabs {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+#sidebar-launcher-splitter {
+  display: none !important;
+}
+
+menupopup, panel, .panel-arrowcontent {
+  --panel-background: rgba(0, 0, 0, 0.7) !important;
+  --panel-color: #ffffff !important;
+}
