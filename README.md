@@ -24,7 +24,7 @@ it's a flake, with home manager pulled in as a nixos module.
 - **backups:** restic, daily, home dir to the storage drive (steam library and caches left out)
 - **creative:** krita, aseprite, davinci resolve (the free one, opencl through rocm), obs studio with a virtual camera, pipewire screen + per-app audio capture, vaapi encoding and vulkan game capture
 - **games:** steam + gamemode, ring racers, prism launcher
-- **other:** spotify via spicetify, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
+- **other:** libreoffice, spotify via spicetify, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
 
 ## layout
 
