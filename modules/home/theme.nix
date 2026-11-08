@@ -38,9 +38,4 @@ in
     platformTheme.name = "gtk3";
     style.name = "adwaita-dark";
   };
-
-  xdg.configFile = {
-    "qt5ct".source = "${dots}/qt5ct";
-    "qt6ct".source = "${dots}/qt6ct";
-  };
 }

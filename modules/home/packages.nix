@@ -43,9 +43,7 @@
     xwayland-satellite
     libnotify
 
-    # qt theming
+    # cursor
     kdePackages.breeze
-    kdePackages.qt6ct
-    libsForQt5.qt5ct
   ];
 }
