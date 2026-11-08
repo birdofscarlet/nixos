@@ -19,8 +19,9 @@ Flake-based, with Home Manager as a NixOS module.
 - **Assembly / reversing in Emacs:** nasm-mode with asm-lsp, one-key build/run/debug, gdb many-windows, disaster and rmsbolt for C to asm, hex and ELF views, x86-lookup into the Intel SDM
 - **Security tools:** pwntools/scapy/impacket Python env, gdb + gef, ghidra, radare2, imhex, nmap, ffuf, gobuster, feroxbuster, sqlmap, Burp Suite, john, Wireshark, openvpn for HTB
 - **Virtualisation:** VMware Workstation (for Kali), distrobox on rootless podman for AUR and `.deb` packages
-- **Browser:** Firefox with a transparent userChrome and a TUI-style start page (`startpage/`)
+- **Browser:** Firefox with a transparent userChrome and a TUI-style start page (`startpage/`) for home and new tabs
 - **Kernel / hardware:** CachyOS LTS kernel (Zen 4 build) from its binary cache, early amdgpu KMS, AMD microcode, fwupd for device firmware
+- **Backups:** restic, daily, home directory to the storage drive (Steam library and caches excluded)
 - **Other:** Spotify via spicetify, Steam + gamemode, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
 
 ## Layout
@@ -36,6 +37,7 @@ Flake-based, with Home Manager as a NixOS module.
 ├── modules/
 │   ├── nixos/                      system modules (default.nix imports all but gpu-*)
 │   │   ├── audio.nix               pipewire
+│   │   ├── backup.nix              daily restic of ~ to /mnt/storage
 │   │   ├── basepkgs.nix            git, gcc, python3, nautilus
 │   │   ├── bluetooth.nix
 │   │   ├── boot.nix                GRUB (EFI), quiet boot
@@ -57,16 +59,16 @@ Flake-based, with Home Manager as a NixOS module.
 │       ├── default.nix
 │       ├── dotfiles.nix            links dotfiles/<host>/ into ~/.config
 │       ├── emacs.nix               Emacs packages, live-linked init.el
-│       ├── firefox.nix             profile, userChrome, start page
+│       ├── firefox.nix             profile, userChrome, start page as home + new tab
 │       ├── packages.nix            apps, media, terminal, desktop plumbing
 │       ├── scripts.nix             toggle-mic, wallpicker
 │       ├── security.nix            HTB / reversing / pwn tools, asm-lsp config
 │       ├── shell.nix               fish + nix abbreviations, direnv, micro
 │       ├── spotify.nix             spicetify
-│       └── theme.nix               GTK, icons, Qt, dark mode
+│       └── theme.nix               GTK, icons, dark mode, Qt via gtk3 + adwaita-dark
 ├── dotfiles/
 │   ├── alicebox/                   niri, waybar, fuzzel, fnott, kitty, btop, fastfetch,
-│   │                               qt5ct, qt6ct, gtk-theme, firefox/userChrome.css
+│   │                               gtk-theme, firefox/userChrome.css
 │   └── alicepad/                   laptop variant, to be replaced
 ├── emacs/
 │   ├── init.el                     symlinked live into ~/.config/emacs
@@ -164,6 +166,20 @@ Boxes share your home directory, so clone AUR packages somewhere outside this re
   `cache.lantian.pub` binary cache. On a fresh install, switch once with the cache
   settings before enabling the kernel, or it gets compiled locally.
 - **Python tools:** pwntools already ships `ROPgadget` and `checksec`, so don't add those packages separately.
+
+### Backups
+
+restic runs daily as root and backs up `~` to `/mnt/storage/restic/home`
+(7 daily, 4 weekly, 6 monthly snapshots). The password lives in `/root/restic-password`,
+outside the repo; keep a copy somewhere else or the backup can't be restored.
+
+```sh
+sudo systemctl start restic-backups-home   # run now
+sudo restic -r /mnt/storage/restic/home -p /root/restic-password snapshots
+sudo restic -r /mnt/storage/restic/home -p /root/restic-password restore latest --target /tmp/restore --include /home/cardinal/org
+```
+
+The unit requires `/mnt/storage` to be mounted, so it fails instead of writing to the root drive.
 
 ## Adding a machine
 
