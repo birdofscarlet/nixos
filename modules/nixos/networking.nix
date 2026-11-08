@@ -1,9 +1,5 @@
-{ config, pkgs, ... }:
-
+{ hostname, ... }:
 {
-
-  networking.hostName = "alicebox";
+  networking.hostName = hostname;
   networking.networkmanager.enable = true;
-
-
 }
