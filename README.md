@@ -20,19 +20,62 @@ Flake-based, with Home Manager as a NixOS module.
 - **Security tools:** pwntools/scapy/impacket Python env, gdb + gef, ghidra, radare2, imhex, nmap, ffuf, gobuster, feroxbuster, sqlmap, Burp Suite, john, Wireshark, openvpn for HTB
 - **Virtualisation:** VMware Workstation (for Kali), distrobox on rootless podman for AUR and `.deb` packages
 - **Browser:** Firefox with a transparent userChrome and a TUI-style start page (`startpage/`)
+- **Kernel / hardware:** CachyOS LTS kernel (Zen 4 build) from its binary cache, early amdgpu KMS, AMD microcode, fwupd for device firmware
 - **Other:** Spotify via spicetify, Steam + gamemode, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
 
 ## Layout
 
 ```
-flake.nix                 inputs, and one mkHost call per machine
-hosts/<host>/             per-machine config: hardware, disks, host-only bits
-modules/nixos/            system modules shared by every host
-modules/home/             Home Manager modules (theme, firefox, emacs, packages, ...)
-dotfiles/<host>/          config directories copied into ~/.config
-emacs/                    init.el and themes, symlinked live into ~/.config/emacs
-startpage/                browser start page (html/js/css, no build step)
-Wallpapers/               wallpapers (see License)
+.
+├── flake.nix                       inputs, mkHost per machine, nixfmt-tree formatter
+├── flake.lock
+├── hosts/
+│   └── alicebox/
+│       ├── configuration.nix       imports modules/nixos + gpu-amd, storage drive
+│       └── hardware-configuration.nix
+├── modules/
+│   ├── nixos/                      system modules (default.nix imports all but gpu-*)
+│   │   ├── audio.nix               pipewire
+│   │   ├── basepkgs.nix            git, gcc, python3, nautilus
+│   │   ├── bluetooth.nix
+│   │   ├── boot.nix                GRUB (EFI), quiet boot
+│   │   ├── desktop.nix             greetd + tuigreet, niri, fonts, printing
+│   │   ├── firmware.nix            fwupd
+│   │   ├── gaming.nix              Steam, proton-ge, gamemode
+│   │   ├── gpu-amd.nix             early amdgpu KMS (imported per host)
+│   │   ├── graphics.nix            Mesa, 32-bit
+│   │   ├── input.nix               keyd: caps lock = ctrl
+│   │   ├── kernel.nix              CachyOS kernel + cache, VMware module fix
+│   │   ├── locale.nix
+│   │   ├── networking.nix          hostname from the flake, NetworkManager
+│   │   ├── nix.nix                 flakes, gc, store optimise, nix-ld
+│   │   ├── security.nix            Wireshark
+│   │   ├── theme.nix               GTK theme system-wide
+│   │   ├── users.nix               cardinal, fish
+│   │   └── virtualisation.nix      VMware Workstation, podman + distrobox
+│   └── home/                       Home Manager modules
+│       ├── default.nix
+│       ├── dotfiles.nix            links dotfiles/<host>/ into ~/.config
+│       ├── emacs.nix               Emacs packages, live-linked init.el
+│       ├── firefox.nix             profile, userChrome, start page
+│       ├── packages.nix            apps, media, terminal, desktop plumbing
+│       ├── scripts.nix             toggle-mic, wallpicker
+│       ├── security.nix            HTB / reversing / pwn tools, asm-lsp config
+│       ├── shell.nix               fish + nix abbreviations, direnv, micro
+│       ├── spotify.nix             spicetify
+│       └── theme.nix               GTK, icons, Qt, dark mode
+├── dotfiles/
+│   ├── alicebox/                   niri, waybar, fuzzel, fnott, kitty, btop, fastfetch,
+│   │                               qt5ct, qt6ct, gtk-theme, firefox/userChrome.css
+│   └── alicepad/                   laptop variant, to be replaced
+├── emacs/
+│   ├── init.el                     symlinked live into ~/.config/emacs
+│   └── themes/graphite-mono-theme.el
+├── startpage/                      browser start page (html/js, no build step)
+│   ├── index.html
+│   ├── app.js
+│   └── links.js                    public links; links.local.js is gitignored
+└── Wallpapers/                     see License
 ```
 
 ## Usage
@@ -115,8 +158,11 @@ Boxes share your home directory, so clone AUR packages somewhere outside this re
 
 - **VMware kernel modules:** nixpkgs' `vmware-modules` doesn't sign vmmon/vmnet,
   which breaks the kernel-modules build (`cat: misc/vmmon.ko.cer: No such file or directory`).
-  `modules/nixos/virtualisation.nix` overrides it to sign them with `kmodigest`.
+  `modules/nixos/kernel.nix` overrides it to sign them with `kmodigest`.
   Remove the override once nixpkgs is fixed.
+- **CachyOS kernel:** uses the `pinned` overlay so kernels come from the
+  `cache.lantian.pub` binary cache. On a fresh install, switch once with the cache
+  settings before enabling the kernel, or it gets compiled locally.
 - **Python tools:** pwntools already ships `ROPgadget` and `checksec`, so don't add those packages separately.
 
 ## Adding a machine
