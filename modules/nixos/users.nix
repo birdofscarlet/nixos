@@ -7,7 +7,10 @@
   users.users.cardinal = {
     isNormalUser = true;
     description = "cardinal";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     shell = pkgs.fish;
   };
 
