@@ -45,6 +45,6 @@
       nixosConfigurations = {
         alicebox = mkHost "alicebox" ./modules/home;
       };
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt;
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
     };
 }
