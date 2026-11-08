@@ -12,7 +12,7 @@
     extra-trusted-public-keys = [ "lantian:WVGO7vsRMSEN+h7Lp7kv6SAmrkEXgUGbbXm7jMDjBuQ=" ];
   };
 
-  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-lts-zen4.extend (
+  boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-zen4.extend (
     _: super: {
       vmware = super.vmware.overrideAttrs (old: {
         postInstall = (old.postInstall or "") + ''
