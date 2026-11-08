@@ -7,6 +7,7 @@
     ./input.nix
     ./boot.nix
     ./kernel.nix
+    ./firmware.nix
     ./desktop.nix
     ./graphics.nix
     ./gaming.nix
