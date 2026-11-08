@@ -10,6 +10,8 @@
     ./graphics.nix
     ./gaming.nix
     ./bluetooth.nix
+    ./virtualisation.nix
+    ./security.nix
     ./users.nix
     ./networking.nix
     ./basepkgs.nix

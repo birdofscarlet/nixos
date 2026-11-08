@@ -22,6 +22,7 @@
     kitty
     fastfetch
     btop
+    gh
     yazi
     cmatrix
     peaclock

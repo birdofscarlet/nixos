@@ -26,6 +26,9 @@ in
       nasm-mode
       disaster
       x86-lookup
+      rmsbolt
+      nhexl-mode
+      elf-mode
       magit
       envrc
       vterm

@@ -9,6 +9,7 @@
     ./emacs.nix
     ./shell.nix
     ./packages.nix
+    ./security.nix
     ./scripts.nix
   ];
 

@@ -199,11 +199,101 @@
 (use-package powershell
   :mode ("\\.ps1\\'" . powershell-mode))
 
-(use-package nasm-mode :mode "\\.nasm\\'")
-(use-package disaster :bind ("C-c d" . disaster))
+;; ---------------------------------- ;;
+;;        ASSEMBLY + REVERSING        ;;
+;; ---------------------------------- ;;
+
+;; .asm/.nasm -> nasm-mode (Intel syntax); .s/.S stay in built-in asm-mode (GAS).
+;; In nasm-mode:  C-c C-c build   C-c C-r run in vterm
+;;                C-c C-d gdb (many-windows)   C-c C-g gef in vterm
+;; A Makefile next to the file wins over the default nasm+ld command.
+
+(defun birdmacs/asm-binary ()
+  "Executable name for the current assembly buffer."
+  (file-name-sans-extension (file-name-nondirectory buffer-file-name)))
+
+(defun birdmacs/asm-compile-command ()
+  "nasm + ld for the current file: 64-bit ELF with DWARF debug info."
+  (let ((src (shell-quote-argument (file-name-nondirectory buffer-file-name)))
+        (bin (shell-quote-argument (birdmacs/asm-binary))))
+    (format "nasm -f elf64 -g -F dwarf %s -o %s.o && ld %s.o -o %s"
+            src bin bin bin)))
+
+(defun birdmacs/asm-setup ()
+  "Buffer-local setup for assembly buffers."
+  (setq-local indent-tabs-mode nil
+              tab-width 8)
+  (when (and buffer-file-name
+             (not (file-exists-p (expand-file-name "Makefile"))))
+    (setq-local compile-command (birdmacs/asm-compile-command))))
+
+(defun birdmacs/asm-run ()
+  "Run the built binary for this buffer in vterm."
+  (interactive)
+  (birdmacs/vterm-run
+   (format "cd %s && ./%s"
+           (shell-quote-argument default-directory)
+           (shell-quote-argument (birdmacs/asm-binary)))))
+
+(defun birdmacs/asm-gdb ()
+  "Debug the built binary with Emacs' gdb UI."
+  (interactive)
+  (gdb (format "gdb -i=mi %s"
+               (shell-quote-argument
+                (expand-file-name (birdmacs/asm-binary))))))
+
+(defun birdmacs/asm-gef ()
+  "Debug the built binary with gef in vterm."
+  (interactive)
+  (birdmacs/vterm-run
+   (format "cd %s && gef ./%s"
+           (shell-quote-argument default-directory)
+           (shell-quote-argument (birdmacs/asm-binary)))))
+
+(use-package nasm-mode
+  :mode ("\\.\\(nasm\\|asm\\)\\'" . nasm-mode)
+  :hook (nasm-mode . birdmacs/asm-setup)
+  :bind (:map nasm-mode-map
+              ("C-c C-c" . compile)
+              ("C-c C-r" . birdmacs/asm-run)
+              ("C-c C-d" . birdmacs/asm-gdb)
+              ("C-c C-g" . birdmacs/asm-gef)))
+
+(add-hook 'asm-mode-hook #'birdmacs/asm-setup)
+
+;; asm-lsp: hover docs for instructions/registers + nasm diagnostics.
+;; Global config in ~/.config/asm-lsp (from modules/home/security.nix).
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs '((nasm-mode asm-mode) . ("asm-lsp"))))
+(add-hook 'nasm-mode-hook #'eglot-ensure)
+(add-hook 'asm-mode-hook #'eglot-ensure)
+
+(use-package gdb-mi
+  :custom
+  (gdb-many-windows t)
+  (gdb-show-main t)
+  (gdb-restore-window-configuration-after-quit t))
+
+;; C -> assembly. disaster: objdump of the object for the line at point.
+;; rmsbolt: live compiler-explorer view (M-x rmsbolt in a C buffer).
+(use-package disaster
+  :bind ("C-c d" . disaster)
+  :custom
+  (disaster-objdump "objdump -d -M intel -Sl --no-show-raw-insn"))
+
+(use-package rmsbolt
+  :commands rmsbolt
+  :custom (rmsbolt-asm-format "intel"))
+
 (use-package x86-lookup
   :bind ("C-c x" . x86-lookup)
-  :custom (x86-lookup-pdf "~/docs/intel-sdm.pdf"))
+  :custom (x86-lookup-pdf (expand-file-name "~/docs/intel-sdm.pdf")))
+
+;; binaries: hex view and readelf-style view
+(use-package nhexl-mode :commands nhexl-mode)
+(use-package elf-mode
+  :commands elf-mode
+  :magic ("\dELF" . elf-mode))
 
 (use-package subword
   :hook (prog-mode . subword-mode))
