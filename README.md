@@ -68,4 +68,8 @@ nix-cachyos-kernel.
 
 ## License
 
-TODO: check the upstream repo's license before choosing one.
+My own files are under the WTFPL (see `LICENSE`).
+The starting point was [haaakez/nixos-configuration](https://github.com/haaakez/nixos-configuration),
+which has no license; those parts remain the original author's work.
+Wallpapers belong to their respective creators and aren't covered by this license.
+
