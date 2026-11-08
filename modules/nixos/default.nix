@@ -8,6 +8,7 @@
     ./boot.nix
     ./kernel.nix
     ./firmware.nix
+    ./backup.nix
     ./desktop.nix
     ./graphics.nix
     ./gaming.nix
