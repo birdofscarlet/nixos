@@ -48,7 +48,7 @@ it's a flake, with home manager pulled in as a nixos module.
 │   │   ├── nix.nix                 flakes, gc, store optimise, nix-ld
 │   │   ├── obs.nix                 obs studio, virtual camera, plugins
 │   │   ├── security.nix            wireshark
-│   │   └── virtualisation.nix      vmware workstation, podman + distrobox
+│   │   └── virtualisation.nix      vmware workstation (no nat), podman + distrobox
 │   └── home/                       home manager modules
 │       ├── default.nix
 │       ├── dotfiles.nix            links dotfiles/<host>/ into ~/.config
@@ -171,6 +171,10 @@ boxes share your home dir, so clone aur stuff somewhere that isn't this repo.
   which breaks the kernel-modules build (`cat: misc/vmmon.ko.cer: No such file or directory`).
   `modules/nixos/boot.nix` overrides it to sign them with `kmodigest`.
   pull the override once nixpkgs fixes it.
+- **vmware nat:** `vmnet-natd` segfaults on start, so `/etc/vmware/networking` is
+  written from `virtualisation.nix` with only vmnet1 (host-only) and no vmnet8 (nat).
+  bridged and host-only work. the virtual network editor's changes get overwritten
+  on the next switch, so change networks in that file instead.
 - **cachyos kernel:** uses the `pinned` overlay so kernels come from the
   `cache.lantian.pub` binary cache. on a fresh install, switch once with the cache
   settings before turning the kernel on, or it gets compiled locally.
