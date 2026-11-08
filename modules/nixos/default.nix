@@ -7,7 +7,9 @@
     ./input.nix
     ./boot.nix
     ./desktop.nix
+    ./graphics.nix
     ./gaming.nix
+    ./bluetooth.nix
     ./users.nix
     ./networking.nix
     ./basepkgs.nix

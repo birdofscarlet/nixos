@@ -10,6 +10,7 @@
     enable = true;
     efiSupport = true;
     device = "nodev";
+    configurationLimit = 10;
   #  useOSProber = true; <--- uncomment if windows install on other drive
   };
 

@@ -1,7 +1,4 @@
-{ pkgs, ... }:
-let
-  pythonEnv = pkgs.python3.withPackages (ps: with ps; [ websockets evdev ]);
-in
+{ ... }:
 {
   services.keyd = {
     enable = true;
@@ -10,5 +7,4 @@ in
       settings.main.capslock = "layer(control)";
     };
   };
-
 }
