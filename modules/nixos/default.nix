@@ -6,6 +6,7 @@
     ./audio.nix
     ./input.nix
     ./boot.nix
+    ./kernel.nix
     ./desktop.nix
     ./graphics.nix
     ./gaming.nix
