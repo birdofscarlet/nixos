@@ -1,23 +1,14 @@
 { ... }:
 {
   imports = [
-    ./nix.nix
-    ./locale.nix
-    ./audio.nix
-    ./input.nix
+    ./base.nix
     ./boot.nix
-    ./kernel.nix
-    ./firmware.nix
-    ./backup.nix
+    ./hardware.nix
     ./desktop.nix
-    ./graphics.nix
+    ./nix.nix
     ./gaming.nix
-    ./bluetooth.nix
-    ./virtualisation.nix
     ./security.nix
-    ./users.nix
-    ./networking.nix
-    ./basepkgs.nix
-    ./theme.nix
+    ./virtualisation.nix
+    ./backup.nix
   ];
 }

@@ -36,24 +36,15 @@ Flake-based, with Home Manager as a NixOS module.
 │       └── hardware-configuration.nix
 ├── modules/
 │   ├── nixos/                      system modules (default.nix imports all but gpu-*)
-│   │   ├── audio.nix               pipewire
 │   │   ├── backup.nix              daily restic of ~ to /mnt/storage
-│   │   ├── basepkgs.nix            git, gcc, python3, nautilus
-│   │   ├── bluetooth.nix
-│   │   ├── boot.nix                GRUB (EFI), quiet boot
-│   │   ├── desktop.nix             greetd + tuigreet, niri, fonts, printing
-│   │   ├── firmware.nix            fwupd
+│   │   ├── base.nix                base packages, locale, networking, users
+│   │   ├── boot.nix                GRUB, CachyOS kernel + cache, VMware module fix
+│   │   ├── desktop.nix             greetd + tuigreet, niri, fonts, GTK theme, keyd
 │   │   ├── gaming.nix              Steam, proton-ge, gamemode
 │   │   ├── gpu-amd.nix             early amdgpu KMS (imported per host)
-│   │   ├── graphics.nix            Mesa, 32-bit
-│   │   ├── input.nix               keyd: caps lock = ctrl
-│   │   ├── kernel.nix              CachyOS kernel + cache, VMware module fix
-│   │   ├── locale.nix
-│   │   ├── networking.nix          hostname from the flake, NetworkManager
+│   │   ├── hardware.nix            pipewire, graphics, bluetooth, fwupd
 │   │   ├── nix.nix                 flakes, gc, store optimise, nix-ld
 │   │   ├── security.nix            Wireshark
-│   │   ├── theme.nix               GTK theme system-wide
-│   │   ├── users.nix               cardinal, fish
 │   │   └── virtualisation.nix      VMware Workstation, podman + distrobox
 │   └── home/                       Home Manager modules
 │       ├── default.nix
@@ -160,7 +151,7 @@ Boxes share your home directory, so clone AUR packages somewhere outside this re
 
 - **VMware kernel modules:** nixpkgs' `vmware-modules` doesn't sign vmmon/vmnet,
   which breaks the kernel-modules build (`cat: misc/vmmon.ko.cer: No such file or directory`).
-  `modules/nixos/kernel.nix` overrides it to sign them with `kmodigest`.
+  `modules/nixos/boot.nix` overrides it to sign them with `kmodigest`.
   Remove the override once nixpkgs is fixed.
 - **CachyOS kernel:** uses the `pinned` overlay so kernels come from the
   `cache.lantian.pub` binary cache. On a fresh install, switch once with the cache

@@ -1,6 +1,15 @@
-{ lib, ... }:
-
+{ pkgs, hostname, ... }:
 {
+  # packages
+  environment.systemPackages = with pkgs; [
+    git
+    gcc
+    python3
+    nautilus
+    bubblewrap
+  ];
+
+  # locale
   time.timeZone = "America/Chicago";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
@@ -19,5 +28,22 @@
     layout = "us";
     variant = "";
     options = "grp:alt_shift_toggle";
+  };
+
+  # networking
+  networking.hostName = hostname;
+  networking.networkmanager.enable = true;
+
+  # users
+  programs.fish.enable = true;
+
+  users.users.cardinal = {
+    isNormalUser = true;
+    description = "cardinal";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
+    shell = pkgs.fish;
   };
 }
