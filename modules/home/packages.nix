@@ -10,6 +10,7 @@
     kdePackages.kdenlive
     pavucontrol
     prismlauncher
+    libreoffice
 
     # games
     ringracers
