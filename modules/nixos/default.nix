@@ -10,5 +10,6 @@
     ./security.nix
     ./virtualisation.nix
     ./backup.nix
+    ./obs.nix
   ];
 }

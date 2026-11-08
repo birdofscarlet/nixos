@@ -11,6 +11,16 @@
     pavucontrol
     prismlauncher
 
+    # games
+    ringracers
+
+    # art
+    aseprite
+    krita
+
+    # video
+    davinci-resolve
+
     # media
     mpv
     imv
