@@ -1,13 +1,22 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 let
   dots = ../../dotfiles/alicebox;
   repo = "${config.home.homeDirectory}/nixconfig";
+  startpage = "file://${config.home.homeDirectory}/startpage/index.html";
 in
 {
   programs.firefox = {
     enable = true;
     configPath = ".mozilla/firefox";
+    package = pkgs.firefox.override {
+      extraPrefs = ''
+        try {
+          const { AboutNewTab } = ChromeUtils.importESModule("resource:///modules/AboutNewTab.sys.mjs");
+          AboutNewTab.newTabURL = "${startpage}";
+        } catch (e) { Components.utils.reportError(e); }
+      '';
+    };
     profiles.cardinal = {
       isDefault = true;
       settings = {
@@ -22,7 +31,7 @@ in
 
         # start page
         "browser.startup.page" = 1;
-        "browser.startup.homepage" = "file://${config.home.homeDirectory}/startpage/index.html";
+        "browser.startup.homepage" = startpage;
         "browser.newtabpage.enabled" = false;
       };
       userChrome = builtins.readFile "${dots}/firefox/userChrome.css";
