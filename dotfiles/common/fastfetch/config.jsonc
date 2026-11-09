@@ -30,7 +30,7 @@
         },
         {
             "type": "packages",
-            "format": "packages: {}",
+            "format": "packages: {all}",
             "key": " ",
             "keyColor": "#d4d4d4"
         },
