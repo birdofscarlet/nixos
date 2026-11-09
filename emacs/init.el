@@ -373,6 +373,15 @@
 
 (dolist (d '("courses" "htb" "attachments" "daily"))
   (make-directory (expand-file-name d "~/org/roam/") t))
+(make-directory (expand-file-name "~/docs/courses/") t)
+
+(defun birdmacs/pick-pdf ()
+  "Ask for a PDF, starting in ~/docs/courses/."
+  (abbreviate-file-name
+   (expand-file-name
+    (read-file-name "PDF: " "~/docs/courses/" nil t nil
+                    (lambda (f) (or (file-directory-p f)
+                                    (string-suffix-p ".pdf" f t)))))))
 
 (defun birdmacs/org-agenda-refresh-files (&rest _)
   "Point the agenda at every org file under ~/org."
@@ -393,10 +402,15 @@
       :target (file+head "courses/%<%Y%m%d>-${slug}.org"
                          "#+title: ${title}\n#+filetags: :course:\n")
       :unnarrowed t)
+     ("p" "course pdf (org-noter)" plain
+      "* Notes\n:PROPERTIES:\n:NOTER_DOCUMENT: %(birdmacs/pick-pdf)\n:END:\n%?\n\n* Questions\n- Q: \n  A: \n"
+      :target (file+head "courses/%<%Y%m%d>-${slug}.org"
+                         "#+title: ${title}\n#+filetags: :course:\n")
+      :unnarrowed t)
      ("h" "HTB box" plain
-      "* Recon\n%?\n* Enumeration\n* Foothold\n* Privesc\n* Loot / flags\n* Lessons\n"
+      "* Recon\n#+begin_src shell :dir /ssh:kali:~\nmkdir -p htb/${slug}\n#+end_src\n%?\n* Enumeration\n* Foothold\n* Privesc\n* Loot / flags\n* Lessons\n"
       :target (file+head "htb/${slug}.org"
-                         "#+title: ${title}\n#+filetags: :htb:\n#+property: header-args:shell :dir /ssh:kali:~/htb/${slug}\n")
+                         "#+title: ${title}\n#+filetags: :htb:\n#+property: header-args:shell :dir /ssh:kali:~/htb/${slug} :results output\n")
       :unnarrowed t)))
   :init
   (define-prefix-command 'birdmacs/org-roam-map)
@@ -411,7 +425,8 @@
         ("d" . org-roam-dailies-capture-today)
         ("t" . org-roam-dailies-goto-today)
         ("y" . org-roam-dailies-goto-yesterday)
-        ("D" . org-roam-dailies-goto-date))
+        ("D" . org-roam-dailies-goto-date)
+        ("n" . org-noter))
   :config
   (setq org-roam-dailies-directory "daily/"
         org-roam-dailies-capture-templates

@@ -48,6 +48,17 @@ in
     exiftool
   ];
 
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    settings.kali = {
+      HostName = "172.16.211.10";
+      User = "kali";
+      IdentityFile = "~/.ssh/id_ed25519";
+      StrictHostKeyChecking = "accept-new";
+    };
+  };
+
   xdg.configFile."asm-lsp/.asm-lsp.toml".text = ''
     [default_config]
     version = "${pkgs.asm-lsp.version}"

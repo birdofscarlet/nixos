@@ -175,7 +175,8 @@ restic backs it up with the rest of `~`. org-modern + olivetti for the look, moo
 | key | does |
 |---|---|
 | `C-c n f` / `C-c n i` | find a note / insert a link to one |
-| `C-c n c` | new note (default, course, htb box) |
+| `C-c n c` | new note (default, course, course + pdf, htb box) |
+| `C-c n n` | org-noter: open the note's pdf next to it, `i` in the pdf adds a note for that page |
 | `C-c n d` / `C-c n t` / `C-c n y` / `C-c n D` | add to today's daily / open today / yesterday / pick a date |
 | `C-c n r` | ripgrep through all notes |
 | `C-c n b` / `C-c n o` / `C-c n l` | backlinks / forward links / backlink sidebar |
@@ -183,8 +184,27 @@ restic backs it up with the rest of `~`. org-modern + olivetti for the look, moo
 | `C-c n p` | paste an image from the clipboard into the note |
 | `C-c a` | agenda over every org file in `~/org` |
 
+course pdfs go in `~/docs/courses/`. the "course + pdf" template asks for one and links it.
+
+htb notes run their shell blocks on the kali vm over tramp (`/ssh:kali:~/htb/<box>`). run the
+`mkdir` block under recon once, then `C-c C-c` on any block runs it in kali and puts the output
+underneath.
+
 todo states are `TODO` `NEXT` `WAIT` → `DONE` / `DROP` (`C-c C-t`). deadlines with `C-c C-d`,
 scheduled with `C-c C-s`, and they show up in the agenda.
+
+### kali vm
+
+two nics: `ethernet0` bridged (internet + htb vpn), `ethernet1` host-only with a static
+`172.16.211.10`, which is what `ssh kali` (set up in `modules/home/security.nix`) and the htb notes use.
+nat isn't an option here, see notes. inside kali:
+
+```sh
+sudo nmcli con add type ethernet ifname eth1 con-name hostonly ipv4.method manual \
+  ipv4.addresses 172.16.211.10/24 ipv4.never-default yes ipv6.method ignore
+sudo systemctl enable --now ssh
+mkdir -p ~/.ssh && echo '<contents of ~/.ssh/id_ed25519.pub on the host>' >> ~/.ssh/authorized_keys
+```
 
 ### distrobox
 
