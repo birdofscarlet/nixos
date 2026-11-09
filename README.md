@@ -15,7 +15,7 @@ it's a flake, with home manager pulled in as a nixos module.
 
 - **desktop:** niri, waybar, fuzzel, fnott, swaybg, greetd + tuigreet, xwayland-satellite
 - **look:** black, monochrome, one violet accent. graphite-mono gtk theme, papirus-dark (violet) icons, jetbrains mono everywhere
-- **editor:** emacs (eglot, vertico/consult/embark, org-roam, org-noter, pdf-tools, magit). packages come from nix, and `init.el` is live-linked so edits show up without a rebuild
+- **editor:** emacs (eglot, vertico/consult/embark, org-roam + dailies, org-noter, org-modern, org-download, pdf-tools, magit). packages come from nix, and `init.el` is live-linked so edits show up without a rebuild
 - **assembly / reversing in emacs:** nasm-mode with asm-lsp, one-key build/run/debug, gdb many-windows, disaster and rmsbolt for c to asm, hex and elf views, x86-lookup into the intel sdm
 - **security tools:** python env with pwntools/scapy/impacket, gdb + gef, ghidra, radare2, imhex, nmap, ffuf, gobuster, feroxbuster, sqlmap, burp suite, john, wireshark, openvpn for htb
 - **virtualisation:** vmware workstation (for kali), distrobox on rootless podman for aur and `.deb` stuff
@@ -166,6 +166,25 @@ select, enter to open. anything else you type gets opened as a url or searched.
 | `C-c x` | look up the instruction at point in the intel sdm |
 
 x86-lookup wants the sdm at `~/docs/intel-sdm.pdf`.
+
+### org notes
+
+everything lives in `~/org/roam` (`courses/`, `htb/`, `daily/`, screenshots in `attachments/`).
+restic backs it up with the rest of `~`. org-modern + olivetti for the look, mood-line in black for the modeline.
+
+| key | does |
+|---|---|
+| `C-c n f` / `C-c n i` | find a note / insert a link to one |
+| `C-c n c` | new note (default, course, htb box) |
+| `C-c n d` / `C-c n t` / `C-c n y` / `C-c n D` | add to today's daily / open today / yesterday / pick a date |
+| `C-c n r` | ripgrep through all notes |
+| `C-c n b` / `C-c n o` / `C-c n l` | backlinks / forward links / backlink sidebar |
+| `C-c n s` | screenshot a region (grim + slurp) into the note |
+| `C-c n p` | paste an image from the clipboard into the note |
+| `C-c a` | agenda over every org file in `~/org` |
+
+todo states are `TODO` `NEXT` `WAIT` → `DONE` / `DROP` (`C-c C-t`). deadlines with `C-c C-d`,
+scheduled with `C-c C-s`, and they show up in the agenda.
 
 ### distrobox
 

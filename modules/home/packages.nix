@@ -31,6 +31,7 @@
     cmatrix
     peaclock
     tree
+    ripgrep
     gamescope
 
     # desktop plumbing

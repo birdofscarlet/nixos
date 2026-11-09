@@ -345,6 +345,23 @@
 ;; ---------------------------------- ;;
 
 (use-package org
+  :custom
+  (org-directory "~/org")
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
+  (org-image-actual-width '(600))
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-ellipsis " …")
+  (org-log-done 'time)
+  (org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "DROP(x)")))
+  (org-agenda-span 'week)
+  (org-agenda-start-on-weekday nil)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-skip-deadline-if-done t)
+  (org-deadline-warning-days 7)
+  :bind ("C-c a" . org-agenda)
+  :hook (org-mode . visual-line-mode)
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -354,8 +371,14 @@
           (not (string-prefix-p (expand-file-name "~/org/")
                                 (or buffer-file-name ""))))))
 
-(dolist (d '("courses" "htb" "attachments"))
+(dolist (d '("courses" "htb" "attachments" "daily"))
   (make-directory (expand-file-name d "~/org/roam/") t))
+
+(defun birdmacs/org-agenda-refresh-files (&rest _)
+  "Point the agenda at every org file under ~/org."
+  (setq org-agenda-files
+        (directory-files-recursively (expand-file-name "~/org/") "\\.org\\'")))
+(advice-add 'org-agenda :before #'birdmacs/org-agenda-refresh-files)
 
 (use-package org-roam
   :custom
@@ -384,9 +407,59 @@
         ("f" . org-roam-node-find)
         ("i" . org-roam-node-insert)
         ("c" . org-roam-capture)
-        ("g" . org-roam-graph))
+        ("g" . org-roam-graph)
+        ("d" . org-roam-dailies-capture-today)
+        ("t" . org-roam-dailies-goto-today)
+        ("y" . org-roam-dailies-goto-yesterday)
+        ("D" . org-roam-dailies-goto-date))
   :config
+  (setq org-roam-dailies-directory "daily/"
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %<%H:%M> %?"
+           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%A, %B %d %Y>\n"))))
   (org-roam-db-autosync-mode))
+
+(use-package consult-org-roam
+  :after org-roam
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  (consult-org-roam-buffer-narrow-key ?r)
+  :bind
+  (:map birdmacs/org-roam-map
+        ("r" . consult-org-roam-search)
+        ("b" . consult-org-roam-backlinks)
+        ("o" . consult-org-roam-forward-links))
+  :config
+  (consult-org-roam-mode 1))
+
+(use-package org-download
+  :after org
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir (expand-file-name "~/org/roam/attachments/"))
+  (org-download-heading-lvl nil)
+  (org-download-timestamp "%Y%m%d-%H%M%S_")
+  (org-download-screenshot-method "grim -g \"$(slurp)\" %s")
+  :bind
+  (:map birdmacs/org-roam-map
+        ("s" . org-download-screenshot)
+        ("p" . org-download-clipboard))
+  :hook (dired-mode . org-download-enable))
+
+(use-package org-modern
+  :after org
+  :custom
+  (org-modern-star 'replace)
+  (org-modern-replace-stars "◉○◈◇")
+  (org-modern-hide-stars nil)
+  (org-modern-table-vertical 1)
+  (org-modern-block-fringe nil)
+  :config
+  (global-org-modern-mode))
+
+(use-package olivetti
+  :custom (olivetti-body-width 100)
+  :hook (org-mode . olivetti-mode))
 
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
@@ -404,7 +477,9 @@
 
 (when birdmacs-jangling-keys
   (use-package mood-line
-    :config (mood-line-mode))
+    :config
+    (setq mood-line-glyph-alist mood-line-glyphs-unicode)
+    (mood-line-mode))
 
   (use-package dashboard
     :init

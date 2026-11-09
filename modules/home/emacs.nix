@@ -37,6 +37,10 @@ in
         dashboard
         org-roam
         org-noter
+        consult-org-roam
+        org-download
+        org-modern
+        olivetti
       ];
   };
 
