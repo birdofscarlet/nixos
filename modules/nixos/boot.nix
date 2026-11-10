@@ -13,7 +13,7 @@
   };
 
   # kernel
-  boot.kernelPackages = import ../../lib/vmware-kernel-fix.nix pkgs pkgs.linuxPackages;
+  boot.kernelPackages = import ../../lib/vmware-kernel-fix.nix pkgs pkgs.linuxPackages_latest;
 
   boot.consoleLogLevel = 0;
   boot.kernelParams = [
