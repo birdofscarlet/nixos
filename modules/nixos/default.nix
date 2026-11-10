@@ -7,7 +7,6 @@
     ./desktop.nix
     ./nix.nix
     ./gaming.nix
-    ./security.nix
     ./virtualisation.nix
   ];
 }

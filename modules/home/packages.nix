@@ -11,6 +11,8 @@
     pavucontrol
     prismlauncher
     libreoffice
+    remmina
+    putty
 
     # games
     ringracers
@@ -39,7 +41,6 @@
     playerctl
     swaybg
     fuzzel
-    wallust
     fnott
     polkit_gnome
     wl-clipboard

@@ -17,16 +17,16 @@ it's a flake, with home manager pulled in as a nixos module.
 - **look:** black, monochrome, one violet accent. graphite-mono gtk theme, papirus-dark (violet) icons, jetbrains mono everywhere
 - **editor:** emacs (eglot, vertico/consult/embark, org-roam + dailies, org-noter, org-modern, org-download, pdf-tools, magit). packages come from nix, and `init.el` is live-linked so edits show up without a rebuild
 - **assembly / reversing in emacs:** nasm-mode with asm-lsp, one-key build/run/debug, gdb many-windows, disaster and rmsbolt for c to asm, hex and elf views, x86-lookup into the intel sdm
-- **security tools:** python env with pwntools/scapy/impacket, gdb + gef, ghidra, radare2, imhex, nmap, ffuf, gobuster, feroxbuster, sqlmap, burp suite, john, wireshark, openvpn for htb
+- **security tools:** just what the emacs asm/c setup and reversing need: nasm, asm-lsp, gdb + gef, strace/ltrace, ghidra, radare2, imhex, binwalk. the offensive stuff (nmap, burp, pwntools, wireshark, the htb vpn) lives in the kali vm
 - **virtualisation:** vmware workstation (for kali), distrobox on rootless podman for aur and `.deb` stuff
 - **browser:** firefox with a transparent userchrome and a tui-style start page (`startpage/`) for home and new tabs
-- **kernel / hardware:** alicebox runs the cachyos kernel (latest, zen 4 build) from its binary cache, early amdgpu kms, amd microcode, fwupd for device firmware. alicepad uses the stock kernel
+- **kernel / hardware:** stock nixos kernel on both hosts (with the vmware module fix), early amdgpu kms on alicebox, amd microcode, fwupd for device firmware
 - **laptop (alicepad):** nixos-hardware g14 profile, nvidia prime offload (radeon runs the desktop, `nvidia-offload <app>` for the dgpu, which sleeps otherwise), asusd, power-profiles-daemon, battery + brightness in waybar
 - **school (alicepad):** libreoffice, xournal++ for pdf annotating, pandoc + texlive for org/markdown to pdf, hunspell
 - **backups (alicebox):** restic, daily, home dir to the storage drive (steam library and caches left out)
 - **creative (alicebox):** krita, aseprite, davinci resolve (the free one, opencl through rocm), obs studio with a virtual camera, pipewire screen + per-app audio capture, vaapi encoding and vulkan game capture
 - **games:** steam + gamemode, ring racers, prism launcher
-- **other:** libreoffice, spotify via spicetify, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
+- **other:** libreoffice, remmina + putty for remote sessions, spotify via spicetify, direnv + nix-direnv for per-project dev shells, nix-ld for prebuilt binaries, gh
 
 ## layout
 
@@ -36,11 +36,11 @@ it's a flake, with home manager pulled in as a nixos module.
 ├── flake.lock
 ├── hosts/
 │   ├── alicebox/
-│   │   ├── configuration.nix       modules/nixos + gpu-amd, cachyos kernel, backup, obs, storage drive
+│   │   ├── configuration.nix       modules/nixos + gpu-amd, backup, obs, storage drive
 │   │   ├── home.nix                modules/home + creative
 │   │   └── hardware-configuration.nix
 │   └── alicepad/
-│       ├── configuration.nix       modules/nixos + nixos-hardware g14, laptop, stock kernel, nvidia power
+│       ├── configuration.nix       modules/nixos + nixos-hardware g14, laptop, nvidia power
 │       ├── home.nix                modules/home + school, brightnessctl
 │       └── hardware-configuration.nix  placeholder until the install generates the real one
 ├── lib/
@@ -49,16 +49,14 @@ it's a flake, with home manager pulled in as a nixos module.
 │   ├── nixos/                      system modules (default.nix imports the shared ones)
 │   │   ├── backup.nix              daily restic of ~ to /mnt/storage (alicebox)
 │   │   ├── base.nix                base packages, locale, networking, users
-│   │   ├── boot.nix                grub, quiet boot
+│   │   ├── boot.nix                grub, stock kernel + vmware fix, quiet boot
 │   │   ├── desktop.nix             greetd + tuigreet, niri, fonts, gtk theme, keyd
 │   │   ├── gaming.nix              steam, proton-ge, gamemode
 │   │   ├── gpu-amd.nix             early amdgpu kms, rocm opencl (alicebox)
 │   │   ├── hardware.nix            pipewire + rtkit, graphics, bluetooth, fwupd
-│   │   ├── kernel-cachyos.nix      cachyos overlay, cache, kernel (alicebox)
 │   │   ├── laptop.nix              power profiles, upower, lid (alicepad)
 │   │   ├── nix.nix                 flakes, gc, store optimise, nix-ld
 │   │   ├── obs.nix                 obs studio, virtual camera, plugins (alicebox)
-│   │   ├── security.nix            wireshark
 │   │   └── virtualisation.nix      vmware workstation (no nat), podman + distrobox
 │   └── home/                       home manager modules
 │       ├── default.nix             shared, imported by hosts/<host>/home.nix
@@ -69,7 +67,7 @@ it's a flake, with home manager pulled in as a nixos module.
 │       ├── packages.nix            apps, games, media, terminal, desktop plumbing
 │       ├── school.nix              xournal++, pandoc, texlive, hunspell (alicepad)
 │       ├── scripts.nix             toggle-mic, wallpicker
-│       ├── security.nix            htb / reversing / pwn tools, asm-lsp config
+│       ├── security.nix            asm/debug + reversing tools, asm-lsp config, ssh kali
 │       ├── shell.nix               fish + nix abbreviations, direnv, micro
 │       ├── spotify.nix             spicetify
 │       └── theme.nix               gtk, icons, dark mode, qt via gtk3 + adwaita-dark
@@ -223,15 +221,11 @@ boxes share your home dir, so clone aur stuff somewhere that isn't this repo.
 - **vmware kernel modules:** nixpkgs' `vmware-modules` doesn't sign vmmon/vmnet,
   which breaks the kernel-modules build (`cat: misc/vmmon.ko.cer: No such file or directory`).
   `lib/vmware-kernel-fix.nix` wraps a host's kernel packages to sign them with `kmodigest`.
-  it's needed on the stock kernel too, not just cachyos.
   pull the override once nixpkgs fixes it.
 - **vmware nat:** `vmnet-natd` segfaults on start, so `/etc/vmware/networking` is
   written from `virtualisation.nix` with only vmnet1 (host-only) and no vmnet8 (nat).
   bridged and host-only work. the virtual network editor's changes get overwritten
   on the next switch, so change networks in that file instead.
-- **cachyos kernel:** uses the `pinned` overlay so kernels come from the
-  `cache.lantian.pub` binary cache. on a fresh install, switch once with the cache
-  settings before turning the kernel on, or it gets compiled locally.
 - **niri per host:** `dotfiles/common/niri/config.kdl` ends with `include "host.kdl"`, so each
   host's outputs and extra binds live in `dotfiles/<host>/niri/host.kdl`. a second `binds { }`
   in the same file is an error, but an included file's binds get merged.
@@ -243,7 +237,6 @@ boxes share your home dir, so clone aur stuff somewhere that isn't this repo.
   transcode to dnxhr/prores with ffmpeg first, or just use kdenlive for those.
 - **obs on niri:** use the "screen capture (pipewire)" source. for game capture, launch games
   with `obs-gamecapture %command%`.
-- **python tools:** pwntools already ships `ROPgadget` and `checksec`, so don't add those as separate packages.
 
 ### backups
 

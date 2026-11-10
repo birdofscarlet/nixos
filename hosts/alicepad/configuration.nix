@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -7,8 +7,6 @@
     ../../modules/nixos
     ../../modules/nixos/laptop.nix
   ];
-
-  boot.kernelPackages = import ../../lib/vmware-kernel-fix.nix pkgs pkgs.linuxPackages;
 
   hardware.nvidia.powerManagement = {
     enable = true;

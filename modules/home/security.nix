@@ -1,27 +1,13 @@
 { pkgs, ... }:
 
-let
-  pyEnv = pkgs.python3.withPackages (
-    ps: with ps; [
-      pwntools
-      requests
-      scapy
-      impacket
-      ipython
-    ]
-  );
-in
 {
   home.packages = with pkgs; [
-    # exploit dev
-    pyEnv
+    # asm / debugging
     nasm
     asm-lsp
     gdb
     gef
     patchelf
-    pwninit
-    one_gadget
 
     # reversing
     ghidra
@@ -32,20 +18,6 @@ in
     strace
     ltrace
     poppler-utils
-
-    # network / web
-    openvpn
-    nmap
-    netcat-openbsd
-    socat
-    ffuf
-    gobuster
-    feroxbuster
-    whatweb
-    sqlmap
-    burpsuite
-    john
-    exiftool
   ];
 
   programs.ssh = {
