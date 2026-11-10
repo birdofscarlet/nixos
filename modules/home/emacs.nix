@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 
 let
   repo = "${config.home.homeDirectory}/nixconfig";
@@ -22,7 +22,6 @@ in
         cape
         kind-icon
         nix-mode
-        powershell
         nasm-mode
         disaster
         x86-lookup
@@ -43,6 +42,14 @@ in
         olivetti
       ];
   };
+
+  home.packages = with pkgs; [
+    # language servers
+    nixd
+    nixfmt
+    clang-tools
+    basedpyright
+  ];
 
   xdg.configFile = {
     "emacs/init.el".source = link "${repo}/emacs/init.el";

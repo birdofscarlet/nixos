@@ -15,7 +15,7 @@ it's a flake, with home manager pulled in as a nixos module.
 
 - **desktop:** niri, waybar, fuzzel, fnott, swaybg, greetd + tuigreet, xwayland-satellite
 - **look:** black, monochrome, one violet accent. graphite-mono gtk theme, papirus-dark (violet) icons, jetbrains mono everywhere
-- **editor:** emacs (eglot, vertico/consult/embark, org-roam + dailies, org-noter, org-modern, org-download, pdf-tools, magit). packages come from nix, and `init.el` is live-linked so edits show up without a rebuild
+- **editor:** emacs (eglot with nixd, clangd and basedpyright, vertico/consult/embark, org-roam + dailies, org-noter, org-modern, org-download, pdf-tools, magit). packages come from nix, and `init.el` is live-linked so edits show up without a rebuild
 - **assembly / reversing in emacs:** nasm-mode with asm-lsp, one-key build/run/debug, gdb many-windows, disaster and rmsbolt for c to asm, hex and elf views, x86-lookup into the intel sdm
 - **security tools:** just what the emacs asm/c setup and reversing need: nasm, asm-lsp, gdb + gef, strace/ltrace, ghidra, radare2, imhex, binwalk. the offensive stuff (nmap, burp, pwntools, wireshark, the htb vpn) lives in the kali vm
 - **virtualisation:** vmware workstation (for kali), distrobox on rootless podman for aur and `.deb` stuff
@@ -62,7 +62,7 @@ it's a flake, with home manager pulled in as a nixos module.
 │       ├── default.nix             shared, imported by hosts/<host>/home.nix
 │       ├── creative.nix            krita, aseprite, davinci resolve (alicebox)
 │       ├── dotfiles.nix            links dotfiles/common + dotfiles/<host> into ~/.config
-│       ├── emacs.nix               emacs packages, live-linked init.el
+│       ├── emacs.nix               emacs packages, lsp servers, live-linked init.el
 │       ├── firefox.nix             profile, userchrome, start page as home + new tab
 │       ├── packages.nix            apps, games, media, terminal, desktop plumbing
 │       ├── school.nix              xournal++, pandoc, texlive, hunspell (alicepad)
@@ -157,13 +157,13 @@ select, enter to open. anything else you type gets opened as a url or searched.
 | key | does |
 |---|---|
 | `C-c C-c` | build: `nasm -f elf64 -g -F dwarf` + `ld` (or `make` if there's a Makefile) |
-| `C-c C-r` | run the binary in vterm |
+| `C-c C-r` | run the binary in a `*vterm-run*` window at the bottom |
 | `C-c C-d` | debug with emacs' gdb ui |
-| `C-c C-g` | debug with gef in vterm |
+| `C-c C-g` | debug with gef in `*vterm-run*` |
 | `C-c d` | disassemble the c line at point (disaster, intel syntax) |
 | `C-c x` | look up the instruction at point in the intel sdm |
 
-x86-lookup wants the sdm at `~/docs/intel-sdm.pdf`.
+x86-lookup wants the sdm at `~/docs/intel-sdm.pdf`. every run gets a fresh `*vterm-run*` and kills the last one (gef included), your normal `*vterm*` is never touched.
 
 ### org notes
 

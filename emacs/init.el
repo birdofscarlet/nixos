@@ -172,18 +172,22 @@
 ;;            PROGRAMMING             ;;
 ;; ---------------------------------- ;;
 
+(defun birdmacs/eglot-format-maybe ()
+  "Format through the language server when eglot manages this buffer."
+  (when (eglot-managed-p)
+    (eglot-format-buffer)))
+
 (defun birdmacs/eglot-format-on-save ()
   "Format the buffer through the language server when saving."
-  (add-hook 'before-save-hook #'eglot-format-buffer nil t))
+  (add-hook 'before-save-hook #'birdmacs/eglot-format-maybe nil t))
 
 (use-package nix-mode
-  :mode "\\.nix\\'")
+  :mode "\\.nix\\'"
+  :hook (nix-mode . birdmacs/eglot-format-on-save))
 
 (use-package eglot
   :hook ((nix-mode
           python-mode
-          powershell-mode
-          scheme-mode
           c-mode
           c++-mode) . eglot-ensure)
   :config
@@ -195,9 +199,6 @@
   :hook (python-mode . (lambda ()
                          (setq-local tab-width 4)
                          (setq-local indent-tabs-mode nil))))
-
-(use-package powershell
-  :mode ("\\.ps1\\'" . powershell-mode))
 
 ;; ---------------------------------- ;;
 ;;        ASSEMBLY + REVERSING        ;;
@@ -320,11 +321,20 @@
            default-directory)))
     (vterm)))
 
+(add-to-list 'display-buffer-alist
+             '("\\*vterm-run\\*"
+               (display-buffer-reuse-window display-buffer-in-side-window)
+               (side . bottom)
+               (window-height . 0.35)))
+
 (defun birdmacs/vterm-run (cmd)
-  "Send CMD to the *vterm* buffer, creating it if needed."
-  (let ((buf (or (get-buffer "*vterm*") (vterm))))
+  "Run CMD in a fresh *vterm-run* buffer, replacing the previous run."
+  (when-let* ((old (get-buffer "*vterm-run*")))
+    (let ((kill-buffer-query-functions nil))
+      (kill-buffer old)))
+  (let ((buf (save-window-excursion (vterm "*vterm-run*"))))
+    (pop-to-buffer buf)
     (with-current-buffer buf
-      (goto-char (point-max))
       (vterm-send-string cmd)
       (vterm-send-return))))
 
@@ -361,7 +371,8 @@
   (org-agenda-skip-deadline-if-done t)
   (org-deadline-warning-days 7)
   :bind ("C-c a" . org-agenda)
-  :hook (org-mode . visual-line-mode)
+  :hook ((org-mode . visual-line-mode)
+         (org-mode . (lambda () (display-line-numbers-mode -1))))
   :config
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -387,7 +398,7 @@
   "Point the agenda at every org file under ~/org."
   (setq org-agenda-files
         (directory-files-recursively (expand-file-name "~/org/") "\\.org\\'")))
-(advice-add 'org-agenda :before #'birdmacs/org-agenda-refresh-files)
+(advice-add 'org-agenda-prepare :before #'birdmacs/org-agenda-refresh-files)
 
 (use-package org-roam
   :custom
@@ -435,7 +446,9 @@
   (org-roam-db-autosync-mode))
 
 (use-package consult-org-roam
-  :after org-roam
+  :init
+  (with-eval-after-load 'org-roam
+    (consult-org-roam-mode 1))
   :custom
   (consult-org-roam-grep-func #'consult-ripgrep)
   (consult-org-roam-buffer-narrow-key ?r)
@@ -443,12 +456,9 @@
   (:map birdmacs/org-roam-map
         ("r" . consult-org-roam-search)
         ("b" . consult-org-roam-backlinks)
-        ("o" . consult-org-roam-forward-links))
-  :config
-  (consult-org-roam-mode 1))
+        ("o" . consult-org-roam-forward-links)))
 
 (use-package org-download
-  :after org
   :custom
   (org-download-method 'directory)
   (org-download-image-dir (expand-file-name "~/org/roam/attachments/"))
@@ -459,7 +469,7 @@
   (:map birdmacs/org-roam-map
         ("s" . org-download-screenshot)
         ("p" . org-download-clipboard))
-  :hook (dired-mode . org-download-enable))
+  :hook ((org-mode dired-mode) . org-download-enable))
 
 (use-package org-modern
   :after org
@@ -482,6 +492,7 @@
   (pdf-tools-install :no-query))
 
 (use-package org-noter
+  :commands org-noter
   :custom
   (org-noter-notes-search-path (list (expand-file-name "~/org/roam/")))
   (org-noter-always-create-frame nil))
@@ -502,7 +513,9 @@
           dashboard-center-content t
           dashboard-vertically-center-content t
           dashboard-items '((recents . 5))
-          initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+          initial-buffer-choice (lambda ()
+                                  (dashboard-open)
+                                  (get-buffer dashboard-buffer-name)))
     :config
     (dashboard-setup-startup-hook)))
 
