@@ -152,7 +152,7 @@ select, enter to open. anything else you type gets opened as a url or searched.
 
 ### assembly in emacs
 
-`.asm`/`.nasm` open in nasm-mode, `.s`/`.S` in the built-in gas mode.
+`.asm`/`.nasm` open in nasm-mode with asm-lsp, `.s`/`.S` in the built-in gas mode (no lsp, asm-lsp is set up for nasm and flags valid gas as errors).
 
 | key | does |
 |---|---|

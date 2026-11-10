@@ -26,6 +26,7 @@
     nerd-fonts.jetbrains-mono
     jetbrains-mono
   ];
+  fonts.fontconfig.defaultFonts.monospace = [ "JetBrains Mono" ];
 
   environment.systemPackages = [
     config.home-manager.users.cardinal.gtk.theme.package

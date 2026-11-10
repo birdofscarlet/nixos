@@ -1,7 +1,7 @@
 // ── startup ─────────────────────────────────────────────────────────
 spawn-at-startup "waybar"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
-spawn-sh-at-startup "swaybg -i \"$(cat ~/.cache/current_wallpaper 2>/dev/null || echo ~/Pictures/Wallpapers/default.jpg)\" -m fill"
+spawn-sh-at-startup "swaybg -i \"$(cat ~/.cache/current_wallpaper 2>/dev/null || echo ~/nixconfig/Wallpapers/default.jpg)\" -m fill"
 
 // ── general ─────────────────────────────────────────────────────────
 prefer-no-csd

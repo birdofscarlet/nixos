@@ -196,6 +196,8 @@
                 '(:nixd (:formatting (:command ["nixfmt"])))))
 
 (use-package python
+  :bind (:map python-base-mode-map
+              ("C-c r" . birdmacs/run-python-file))
   :hook (python-mode . (lambda ()
                          (setq-local tab-width 4)
                          (setq-local indent-tabs-mode nil))))
@@ -255,14 +257,15 @@
               ("C-c C-d" . birdmacs/asm-gdb)
               ("C-c C-g" . birdmacs/asm-gef)))
 
+(setq asm-comment-char ?#)
 (add-hook 'asm-mode-hook #'birdmacs/asm-setup)
 
 (with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs '((nasm-mode asm-mode) . ("asm-lsp"))))
+  (add-to-list 'eglot-server-programs '(nasm-mode . ("asm-lsp"))))
 (add-hook 'nasm-mode-hook #'eglot-ensure)
-(add-hook 'asm-mode-hook #'eglot-ensure)
 
 (use-package gdb-mi
+  :defer t
   :custom
   (gdb-many-windows t)
   (gdb-show-main t)
@@ -347,7 +350,6 @@
 (global-set-key (kbd "C-c t") #'vterm)
 (global-set-key (kbd "C-c T") #'birdmacs/vterm-project)
 (global-set-key (kbd "C-`")   #'birdmacs/toggle-vterm)
-(global-set-key (kbd "C-c r") #'birdmacs/run-python-file)
 (global-set-key (kbd "C-c m") #'project-compile)
 
 ;; ---------------------------------- ;;

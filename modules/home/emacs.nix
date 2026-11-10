@@ -9,8 +9,6 @@ in
     enable = true;
     extraPackages =
       epkgs: with epkgs; [
-        use-package
-        which-key
         vertico
         orderless
         marginalia
