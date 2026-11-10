@@ -66,7 +66,7 @@ it's a flake, with home manager pulled in as a nixos module.
 │       ├── dotfiles.nix            links dotfiles/common + dotfiles/<host> into ~/.config
 │       ├── emacs.nix               emacs packages, lsp servers, live-linked init.el
 │       ├── firefox.nix             profile, userchrome, start page as home + new tab
-│       ├── lock.nix                swaylock + swayidle auto-lock
+│       ├── lock.nix                swaylock + swayidle auto-lock, joystickwake for gamepads
 │       ├── packages.nix            apps, games, media, terminal, desktop plumbing
 │       ├── school.nix              xournal++, pandoc, texlive, hunspell (alicepad)
 │       ├── scripts.nix             toggle-mic, wallpicker
@@ -238,9 +238,10 @@ boxes share your home dir, so clone aur stuff somewhere that isn't this repo.
   or a distrobox.
 - **davinci resolve:** the free linux version can't import or export h.264/h.265 or aac, so
   transcode to dnxhr/prores with ffmpeg first, or just use kdenlive for those.
-- **auto-lock:** swayidle locks at 10 min and turns the screens off at 15. games played only with a
-  controller don't count as activity to the compositor, so it can lock mid-game. touch the mouse
-  now and then, or stop it for the session with `systemctl --user stop swayidle`.
+- **auto-lock:** swayidle locks at 10 min and turns the screens off at 15. the compositor doesn't see
+  gamepads, so `joystickwake` watches them and restarts swayidle (which resets its timer) at most once
+  a minute while a controller is in use. leave a game paused and it still locks. if it never locks with
+  a controller plugged in, that's stick drift: calibrate the deadzone or unplug it.
 - **sysrq:** `kernel.sysrq = 176` allows sync, remount read-only and reboot, nothing else. if the
   gpu hangs and the desktop freezes: hold `Alt+SysRq` and press `s`, `u`, `b` a second apart
   for a clean-ish reboot instead of the power button.

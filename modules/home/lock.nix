@@ -56,4 +56,18 @@ in
       lock = lock;
     };
   };
+
+  systemd.user.services.joystickwake = {
+    Unit = {
+      Description = "Reset the idle timer on gamepad input";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${lib.getExe pkgs.joystickwake} --cooldown 60 --command '${pkgs.systemd}/bin/systemctl --user restart swayidle.service'";
+      Restart = "always";
+      RestartSec = 5;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
 }
