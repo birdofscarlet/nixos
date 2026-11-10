@@ -14,6 +14,7 @@
     libreoffice
     remmina
     putty
+    openvpn
 
     # games
     ringracers
