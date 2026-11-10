@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     # apps
     vesktop
+    discord
     signal-desktop
     gimp
     kdePackages.ark
