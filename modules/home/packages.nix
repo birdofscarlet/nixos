@@ -15,6 +15,7 @@
     remmina
     putty
     openvpn
+    teams-for-linux
 
     # games
     ringracers
