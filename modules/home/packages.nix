@@ -16,6 +16,7 @@
     putty
     openvpn
     teams-for-linux
+    qbittorrent
 
     # games
     ringracers
