@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true;
+    remotePlay.openFirewall = lib.mkDefault true;
     extraCompatPackages = with pkgs; [ proton-ge-bin ];
   };
 

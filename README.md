@@ -20,6 +20,7 @@ it's a flake, with home manager pulled in as a nixos module.
 - **security tools:** just what the emacs asm/c setup and reversing need: nasm, asm-lsp, gdb + gef, strace/ltrace, ghidra, radare2, imhex, binwalk. the offensive stuff (nmap, burp, pwntools, wireshark, the htb vpn) lives in the kali vm
 - **virtualisation:** vmware workstation (for kali), distrobox on rootless podman for aur and `.deb` stuff
 - **browser:** firefox with a transparent userchrome and a tui-style start page (`startpage/`) for home and new tabs
+- **locking / hardening:** auto-lock after 10 min, screens off at 15, always locked before sleep. a few kernel sysctls, nix and sudo only for wheel, `/tmp` wiped on boot. firewall on, no sshd
 - **kernel / hardware:** stock nixos kernel on both hosts (with the vmware module fix), early amdgpu kms on alicebox, amd microcode, fwupd for device firmware
 - **laptop (alicepad):** nixos-hardware g14 profile, nvidia prime offload (radeon runs the desktop, `nvidia-offload <app>` for the dgpu, which sleeps otherwise), asusd, power-profiles-daemon, battery + brightness in waybar
 - **school (alicepad):** libreoffice, xournal++ for pdf annotating, pandoc + texlive for org/markdown to pdf, hunspell
@@ -53,8 +54,9 @@ it's a flake, with home manager pulled in as a nixos module.
 │   │   ├── desktop.nix             greetd + tuigreet, niri, fonts, gtk theme, keyd
 │   │   ├── gaming.nix              steam, proton-ge, gamemode
 │   │   ├── gpu-amd.nix             early amdgpu kms, rocm opencl (alicebox)
+│   │   ├── hardening.nix           sysctls, nix/sudo limited to wheel, /tmp cleanup
 │   │   ├── hardware.nix            pipewire + rtkit, graphics, bluetooth, fwupd
-│   │   ├── laptop.nix              power profiles, upower, lid (alicepad)
+│   │   ├── laptop.nix              power profiles, upower, lid, wifi mac, no steam ports (alicepad)
 │   │   ├── nix.nix                 flakes, gc, store optimise, nix-ld
 │   │   ├── obs.nix                 obs studio, virtual camera, plugins (alicebox)
 │   │   └── virtualisation.nix      vmware workstation (no nat), podman + distrobox
@@ -64,6 +66,7 @@ it's a flake, with home manager pulled in as a nixos module.
 │       ├── dotfiles.nix            links dotfiles/common + dotfiles/<host> into ~/.config
 │       ├── emacs.nix               emacs packages, lsp servers, live-linked init.el
 │       ├── firefox.nix             profile, userchrome, start page as home + new tab
+│       ├── lock.nix                swaylock + swayidle auto-lock
 │       ├── packages.nix            apps, games, media, terminal, desktop plumbing
 │       ├── school.nix              xournal++, pandoc, texlive, hunspell (alicepad)
 │       ├── scripts.nix             toggle-mic, wallpicker
@@ -235,6 +238,12 @@ boxes share your home dir, so clone aur stuff somewhere that isn't this repo.
   or a distrobox.
 - **davinci resolve:** the free linux version can't import or export h.264/h.265 or aac, so
   transcode to dnxhr/prores with ffmpeg first, or just use kdenlive for those.
+- **auto-lock:** swayidle locks at 10 min and turns the screens off at 15. games played only with a
+  controller don't count as activity to the compositor, so it can lock mid-game. touch the mouse
+  now and then, or stop it for the session with `systemctl --user stop swayidle`.
+- **sysrq:** `kernel.sysrq = 176` allows sync, remount read-only and reboot, nothing else. if the
+  gpu hangs and the desktop freezes: hold `Alt+SysRq` and press `s`, `u`, `b` a second apart
+  for a clean-ish reboot instead of the power button.
 - **obs on niri:** use the "screen capture (pipewire)" source. for game capture, launch games
   with `obs-gamecapture %command%`.
 
@@ -263,7 +272,29 @@ the unit needs `/mnt/storage` mounted, so it fails instead of writing to the roo
 
 ### installing alicepad
 
-from the nixos installer on the laptop, after partitioning (label the root `nixos` and the efi partition `boot`, or just use whatever the generated file says):
+from the nixos installer on the laptop. the disk gets encrypted with luks, so it asks for a passphrase on every boot. **this wipes the laptop's disk**, check the name with `lsblk` first (assumed `nvme0n1` here):
+
+```sh
+parted /dev/nvme0n1 -- mklabel gpt
+parted /dev/nvme0n1 -- mkpart ESP fat32 1MiB 1GiB
+parted /dev/nvme0n1 -- set 1 esp on
+parted /dev/nvme0n1 -- mkpart root 1GiB 100%
+mkfs.fat -F 32 -n boot /dev/nvme0n1p1
+cryptsetup luksFormat --type luks2 /dev/nvme0n1p2
+cryptsetup open /dev/nvme0n1p2 cryptroot
+mkfs.btrfs -L nixos /dev/mapper/cryptroot
+mount /dev/mapper/cryptroot /mnt
+btrfs subvolume create /mnt/home
+btrfs subvolume create /mnt/nix
+umount /mnt
+mount -o compress=zstd,noatime /dev/mapper/cryptroot /mnt
+mkdir -p /mnt/home /mnt/nix /mnt/boot
+mount -o subvol=home,compress=zstd,noatime /dev/mapper/cryptroot /mnt/home
+mount -o subvol=nix,compress=zstd,noatime /dev/mapper/cryptroot /mnt/nix
+mount -o umask=0077 /dev/nvme0n1p1 /mnt/boot
+```
+
+then:
 
 ```sh
 lspci -D | grep -E "VGA|3D"     # check the bus ids match the g14 profile (04:00.0 amd, 01:00.0 nvidia)
@@ -275,7 +306,7 @@ git add -A
 nixos-install --flake .#alicepad
 ```
 
-after the first boot, `chown -R cardinal:users ~/nixconfig` and commit the real hardware file.
+the generated hardware file picks up the luks device on its own (`boot.initrd.luks.devices."luks-<uuid>"`). add `allowDiscards = true;` to that entry so trim reaches the ssd. after the first boot, `chown -R cardinal:users ~/nixconfig` and commit the real hardware file. don't lose the passphrase, there's no way back in without it.
 
 ## credits
 

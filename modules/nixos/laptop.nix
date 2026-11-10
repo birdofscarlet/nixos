@@ -10,4 +10,8 @@
     HandleLidSwitchExternalPower = "suspend";
     HandleLidSwitchDocked = "ignore";
   };
+
+  # network
+  networking.networkmanager.wifi.macAddress = "stable-ssid";
+  programs.steam.remotePlay.openFirewall = false;
 }

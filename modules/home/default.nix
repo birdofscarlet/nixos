@@ -4,6 +4,7 @@
   imports = [
     ./dotfiles.nix
     ./theme.nix
+    ./lock.nix
     ./firefox.nix
     ./spotify.nix
     ./emacs.nix

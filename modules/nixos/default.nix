@@ -8,5 +8,6 @@
     ./nix.nix
     ./gaming.nix
     ./virtualisation.nix
+    ./hardening.nix
   ];
 }
