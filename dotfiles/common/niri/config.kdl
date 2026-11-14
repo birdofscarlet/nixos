@@ -1,5 +1,4 @@
 // ── startup ─────────────────────────────────────────────────────────
-spawn-at-startup "waybar"
 spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
 spawn-sh-at-startup "swaybg -i \"$(cat ~/.cache/current_wallpaper 2>/dev/null || echo ~/nixconfig/Wallpapers/black.png)\" -m fill"
 

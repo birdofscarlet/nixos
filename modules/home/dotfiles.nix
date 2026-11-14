@@ -1,4 +1,9 @@
-{ hostname, ... }:
+{
+  hostname,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   common = ../../dotfiles/common;
@@ -14,5 +19,20 @@ in
     "kitty".source = "${common}/kitty";
     "fastfetch".source = "${common}/fastfetch";
     "btop".source = "${common}/btop";
+  };
+
+  systemd.user.services.waybar = {
+    Unit = {
+      Description = "Waybar";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+      X-Restart-Triggers = [ "${host}/waybar" ];
+    };
+    Service = {
+      ExecStart = lib.getExe pkgs.waybar;
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 }
