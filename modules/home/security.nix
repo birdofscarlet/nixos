@@ -1,5 +1,11 @@
 { pkgs, ... }:
 
+let
+  asm-lsp = pkgs.asm-lsp.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.pkg-config ];
+    buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.zstd ];
+  });
+in
 {
   home.packages = with pkgs; [
     # asm / debugging
@@ -33,7 +39,7 @@
 
   xdg.configFile."asm-lsp/.asm-lsp.toml".text = ''
     [default_config]
-    version = "${pkgs.asm-lsp.version}"
+    version = "${asm-lsp.version}"
     assembler = "nasm"
     instruction_set = "x86/x86-64"
 
