@@ -11,6 +11,6 @@ output "DP-2" {
 // ── tablet ──────────────────────────────────────────────────────────
 input {
     tablet {
-        map-to-output "DP-3"
+        map-to-output "DP-2"
     }
 }
